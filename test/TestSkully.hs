@@ -48,6 +48,11 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m a" $ do
                 action <- eval S
                 pure $ action (\a b -> show a ++ " " ++ show b) (* 2) (1 :: Int)
         in evaluated `shouldBe` Just ("1 2", ("", ""))
+    it "eval K a b = a" $
+        let evaluated = runFakeCharSocket ("", "") $ do
+                action <- eval K
+                pure $ action 'a' 'b'
+        in evaluated `shouldBe` Just ('a', ("", ""))
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do

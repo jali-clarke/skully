@@ -37,4 +37,5 @@ eval :: CharSocket m => Skully a -> m a
 eval skully =
     case skully of
         S -> pure (\abc ab a -> abc a (ab a))
+        K -> pure (\a _ -> a)
         _ -> undefined
