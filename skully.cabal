@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 01bbd6daaec065554916928d9bea727ddd9593e0e4ba498ad50c2d571855b674
+-- hash: f2c38d0ff16518a60c6022c645a66e7aa2995f9b256e76c32b4e69d5300e8b60
 
 name:           skully
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       ByteSocket
+      SK
   other-modules:
       Paths_skully
   hs-source-dirs:
@@ -52,6 +53,7 @@ test-suite skully-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      TestSK
       Paths_skully
   hs-source-dirs:
       test

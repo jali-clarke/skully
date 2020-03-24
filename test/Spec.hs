@@ -1,4 +1,6 @@
+import Test.Hspec
 
+import TestSK (testSK)
 
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = hspec testSK
