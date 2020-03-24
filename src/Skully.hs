@@ -1,8 +1,11 @@
 {-# LANGUAGE GADTs #-}
 
 module Skully (
-    Skully(..)
+    Skully(..),
+    eval
 ) where
+
+import CharSocket
 
 data Skully a where
     S :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)
@@ -29,3 +32,9 @@ show' skully =
 
 instance Show (Skully a) where
     show skully = show' skully ""
+
+eval :: CharSocket m => Skully a -> m a
+eval skully =
+    case skully of
+        S -> pure (\abc ab a -> abc a (ab a))
+        _ -> undefined
