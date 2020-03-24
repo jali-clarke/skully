@@ -13,16 +13,19 @@ data Skully a where
     Q :: Skully (Char -> (Char -> Char -> a) -> a)
     Ap :: Skully (a -> b) -> Skully a -> Skully b
 
+show' :: Skully a -> (String -> String)
+show' skully =
+    case skully of
+        S -> ('s' :)
+        K -> ('k' :)
+        U -> ('u' :)
+        L -> ('l' :)
+        Y -> ('y' :)
+        Q -> ('q' :)
+        Ap ex0 ex1 ->
+            show' ex0 . (' ' :) . case ex1 of
+                Ap _ _ -> ('(' :) . show' ex1 . (')' :)
+                _ -> show' ex1
+
 instance Show (Skully a) where
-    show skully =
-        case skully of
-            S -> "s"
-            K -> "k"
-            U -> "u"
-            L -> "l"
-            Y -> "y"
-            Q -> "q"
-            Ap ex0 ex1 ->
-                show ex0 ++ " " ++ case ex1 of
-                    Ap _ _ -> "(" ++ show ex1 ++ ")"
-                    _ -> show ex1
+    show skully = show' skully ""
