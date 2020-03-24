@@ -22,4 +22,7 @@ instance Show (Skully a) where
             L -> "l"
             Y -> "y"
             Q -> "q"
-            Ap ex0 ex1 -> show ex0 ++ " " ++ show ex1
+            Ap ex0 ex1 ->
+                show ex0 ++ " " ++ case ex1 of
+                    Ap _ _ -> "(" ++ show ex1 ++ ")"
+                    _ -> show ex1
