@@ -2,7 +2,7 @@ module Skully (
     Skully(..)
 ) where
 
-data Skully a = S | K | U
+data Skully a = S | K | U | L | Y | Q
 
 instance Show (Skully a) where
     show skully =
@@ -10,3 +10,6 @@ instance Show (Skully a) where
             S -> "s"
             K -> "k"
             U -> "u"
+            L -> "l"
+            Y -> "y"
+            Q -> "q"
