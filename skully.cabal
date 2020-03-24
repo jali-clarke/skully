@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f2c38d0ff16518a60c6022c645a66e7aa2995f9b256e76c32b4e69d5300e8b60
+-- hash: ad77afa7bdbfcda5d2f5a42a392b6eb85a498ab3a613b550bfc0172a158bb438
 
 name:           skully
 version:        0.1.0.0
@@ -28,11 +28,12 @@ source-repository head
 library
   exposed-modules:
       ByteSocket
-      SK
+      Skully
   other-modules:
       Paths_skully
   hs-source-dirs:
       src
+  ghc-options: -Wall -Werror
   build-depends:
       base >=4.7 && <5
   default-language: Haskell2010
@@ -43,7 +44,7 @@ executable skully-exe
       Paths_skully
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
     , skully
@@ -53,11 +54,11 @@ test-suite skully-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      TestSK
+      TestSkully
       Paths_skully
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
     , hspec
