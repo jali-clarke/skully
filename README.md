@@ -1,6 +1,6 @@
 # skully
 
-A super simple, Turing-complete language + interpreter (+ compiler eventually?  maybe) based around polymorphic typed [SK combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus).  Not at all designed to be written by hand.  Looks awfully similar to [Unlambda](https://en.wikipedia.org/wiki/Unlambda).
+A super simple, Turing-complete language + interpreter (+ compiler eventually?  maybe) based around a lazily evaluated, polymorphically typed [SK combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus).  Not at all designed to be written by hand.  Looks awfully similar to [Unlambda](https://en.wikipedia.org/wiki/Unlambda).
 
 Very much a WIP.
 
@@ -17,12 +17,13 @@ k :: forall a b. a -> b -> a
 u :: forall a. Char -> a -> a
 l :: forall a. (Char -> a) -> a
 y :: forall a. (a -> a) -> a
+q :: forall a. Char -> (Char -> Char -> a) -> a
 ```
 
 ## Grammar
 
 ```
-<expr> ::= s | k | u | l | y | <expr><expr> | (<expr>) | <char>
+<expr> ::= s | k | u | l | y | q | <expr><expr> | (<expr>) | <char>
 <char> ::= (any ASCII character)
 ```
 
@@ -54,10 +55,10 @@ Constant function.  Enables ignorance of arguments.
 
 ```
 u :: forall a. Char -> a -> a
-u c a = putchar(c), a
+u x a = putchar(x), a
 ```
 
-Similar to `k`, but outputs the char `c` to `stdout`.  Second argument is simply returned.
+Similar to `k`, but outputs the char `x` to `stdout`.  Second argument is simply returned.
 
 ### l
 
@@ -76,3 +77,12 @@ y g = g (y g)
 ```
 
 Takes the fixed point of its argument.  Enables recursion.
+
+### q
+
+```
+q :: forall a. Char -> (Char -> Char -> a) -> a
+q x g = g (x - 1) (x + 1)
+```
+
+Takes a Char and a callback, and applies the callback to the predecessor and successor of the same Char.  This allows for construction + pattern matching on Char.  If the Char is `\x00`, its predecessor is also `\x00`.  If the Char is `\xff`, its successor is also `\xff`.

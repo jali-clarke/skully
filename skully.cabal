@@ -4,16 +4,16 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6d15e5c31da2350726d95a5ed51b3aa2543f41de4b8da4bfdfacd00e7d544380
+-- hash: 01bbd6daaec065554916928d9bea727ddd9593e0e4ba498ad50c2d571855b674
 
 name:           skully
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/skully#readme>
-homepage:       https://github.com/githubuser/skully#readme
-bug-reports:    https://github.com/githubuser/skully/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2020 Author name here
+description:    Please see the README on GitHub at <https://github.com/jali-clarke/skully#readme>
+homepage:       https://github.com/jali-clarke/skully#readme
+bug-reports:    https://github.com/jali-clarke/skully/issues
+author:         Jinnah Ali-Clarke
+maintainer:     jinnah.ali-clarke@outlook.com
+copyright:      2020 Jinnah Ali-Clarke
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -23,11 +23,11 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/skully
+  location: https://github.com/jali-clarke/skully
 
 library
   exposed-modules:
-      Lib
+      ByteSocket
   other-modules:
       Paths_skully
   hs-source-dirs:
@@ -58,5 +58,6 @@ test-suite skully-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , hspec
     , skully
   default-language: Haskell2010
