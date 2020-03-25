@@ -4,6 +4,8 @@ module TestSkully (
     testSkully
 ) where
 
+import Prelude hiding (getChar, putChar)
+
 import Test.Hspec
 import Control.Monad.State.Lazy
 
@@ -44,17 +46,13 @@ testShowSkully = describe "show :: Skully a -> String" $ do
     it "prints Char '2' as \"2\"" $ show (Char '2') `shouldBe` "2"
 
 testEvalSkully :: Spec
-testEvalSkully = describe "eval :: CharSocket m => Skully a -> m a" $ do
-    it "eval S abc ab a = abc a (ab a)" $
-        let evaluated = runFakeCharSocket ("", "") $ do
-                action <- eval S
-                pure $ action (\a b -> show a ++ " " ++ show b) (* 2) (1 :: Int)
-        in evaluated `shouldBe` Just ("1 2", ("", ""))
-    it "eval K a b = a" $
-        let evaluated = runFakeCharSocket ("", "") $ do
-                action <- eval K
-                pure $ action 'a' 'b'
-        in evaluated `shouldBe` Just ('a', ("", ""))
+testEvalSkully = describe "eval :: Skully a -> a" $ do
+    it "eval L g = g (getChar())" $
+        let AnyCharSocket evaluated = eval L pure
+        in runFakeCharSocket ("y", "") evaluated `shouldBe` Just ('y', ("", ""))
+    it "eval L g = g (getChar()) different args" $
+        let AnyCharSocket evaluated = eval L putChar
+        in runFakeCharSocket ("x", "") evaluated `shouldBe` Just ((), ("", "x"))
                 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do

@@ -5,13 +5,15 @@ module Skully (
     eval
 ) where
 
+import Prelude hiding (getChar, putChar)
+
 import CharSocket
 
 data Skully a where
     S :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)
     K :: Skully (a -> b -> a)
     U :: Skully (Char -> a -> a)
-    L :: Skully ((Char -> a) -> a)
+    L :: Skully ((Char -> AnyCharSocket a) -> AnyCharSocket a)
     Y :: Skully ((a -> a) -> a)
     Q :: Skully (Char -> (Char -> Char -> a) -> a)
     Ap :: Skully (a -> b) -> Skully a -> Skully b
@@ -35,9 +37,8 @@ show' skully =
 instance Show (Skully a) where
     show skully = show' skully ""
 
-eval :: CharSocket m => Skully a -> m a
+eval :: Skully a -> a
 eval skully =
     case skully of
-        S -> pure (\abc ab a -> abc a (ab a))
-        K -> pure (\a _ -> a)
+        L -> \g -> getChar >>= g
         _ -> undefined
