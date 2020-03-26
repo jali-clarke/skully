@@ -42,8 +42,6 @@ testShowSkully = describe "show :: Skully a -> String" $ do
     it "prints Ap K Q as \"k q\"" $ show (Ap K Q) `shouldBe` "kq"
     it "prints Ap S (Ap K K) as \"s (k k)\"" $ show (Ap S (Ap K K)) `shouldBe` "s(kk)"
     it "prints Ap (Ap S K) K as \"s k k\"" $ show (Ap (Ap S K) K) `shouldBe` "skk"
-    it "prints Char 'x' as \"x\"" $ show (Char 'x') `shouldBe` "x"
-    it "prints Char '2' as \"2\"" $ show (Char '2') `shouldBe` "2"
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: Skully a -> a" $ do
