@@ -13,7 +13,7 @@ data Skully a where
     S :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)
     K :: Skully (a -> b -> a)
     U :: Skully (Char -> a -> a)
-    L :: Skully ((Char -> AnyCharSocket a) -> AnyCharSocket a)
+    L :: Skully ((Char -> a) -> a)
     Y :: Skully ((a -> a) -> a)
     Q :: Skully (Char -> (Char -> Char -> a) -> a)
     Ap :: Skully (a -> b) -> Skully a -> Skully b
@@ -35,8 +35,5 @@ show' skully =
 instance Show (Skully a) where
     show skully = show' skully ""
 
-eval :: Skully a -> a
-eval skully =
-    case skully of
-        L -> \g -> getChar >>= g
-        _ -> undefined
+eval :: CharSocket m => Skully a -> m ()
+eval _ = pure ()
