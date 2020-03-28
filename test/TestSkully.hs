@@ -34,6 +34,7 @@ testShowSkully = describe "show :: Skully a -> String" $ do
     it "prints L as \"l\"" $ show L `shouldBe` "l"
     it "prints Y as \"y\"" $ show Y `shouldBe` "y"
     it "prints Q as \"q\"" $ show Q `shouldBe` "q"
+    it "prints E as \"e\"" $ show E `shouldBe` "e"
     it "prints Ap S S as \"ss\"" $ show (Ap S S) `shouldBe` "ss"
     it "prints Ap S Q as \"sq\"" $ show (Ap S Q) `shouldBe` "sq"
     it "prints Ap K Q as \"kq\"" $ show (Ap K Q) `shouldBe` "kq"

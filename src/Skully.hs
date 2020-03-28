@@ -16,6 +16,7 @@ data Skully a where
     L :: Skully ((Char -> a) -> a)
     Y :: Skully ((a -> a) -> a)
     Q :: Skully (Char -> (Char -> Char -> a) -> a)
+    E :: Skully (Char -> Char -> a -> a -> a)
     Ap :: Skully (a -> b) -> Skully a -> Skully b
     Char :: Char -> Skully Char
 
@@ -28,6 +29,7 @@ show' skully =
         L -> ('l' :)
         Y -> ('y' :)
         Q -> ('q' :)
+        E -> ('e' :)
         Ap ex0 ex1 ->
             show' ex0 . case ex1 of
                 Ap _ _ -> ('(' :) . show' ex1 . (')' :)

@@ -18,12 +18,13 @@ u :: forall a. Char -> a -> a
 l :: forall a. (Char -> a) -> a
 y :: forall a. (a -> a) -> a
 q :: forall a. Char -> (Char -> Char -> a) -> a
+e :: forall a. Char -> Char -> a -> a -> a
 ```
 
 ## Grammar
 
 ```
-<expr> ::= s | k | u | l | y | q | <expr><expr> | (<expr>) | <char>
+<expr> ::= s | k | u | l | y | q | e | <expr><expr> | (<expr>) | <char>
 <char> ::= (any ASCII character)
 ```
 
@@ -86,3 +87,12 @@ q x g = g (x - 1) (x + 1)
 ```
 
 Takes a Char and a callback, and applies the callback to the predecessor and successor of the same Char.  This allows for construction + pattern matching on Char.  If the Char is `\x00`, its predecessor is also `\x00`.  If the Char is `\xff`, its successor is also `\xff`.
+
+### e
+
+```
+e :: forall a. Char -> Char -> a -> a -> a
+e c0 c1 a0 a1 = if c0 == c1 then a0 else a1
+```
+
+Takes two chars and two expressions.  If the chars are equal, it returns the first expression.  If the chars are not equal, it returns the second expression (Church encoding of Bools).
