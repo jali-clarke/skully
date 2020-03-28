@@ -17,6 +17,7 @@ data Skully a where
     Y :: Skully ((a -> a) -> a)
     Q :: Skully (Char -> (Char -> Char -> a) -> a)
     Ap :: Skully (a -> b) -> Skully a -> Skully b
+    Char :: Char -> Skully Char
 
 show' :: Skully a -> (String -> String)
 show' skully =
@@ -31,6 +32,7 @@ show' skully =
             show' ex0 . case ex1 of
                 Ap _ _ -> ('(' :) . show' ex1 . (')' :)
                 _ -> show' ex1
+        Char c -> (c :)
 
 instance Show (Skully a) where
     show skully = show' skully ""

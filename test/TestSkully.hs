@@ -39,6 +39,8 @@ testShowSkully = describe "show :: Skully a -> String" $ do
     it "prints Ap K Q as \"kq\"" $ show (Ap K Q) `shouldBe` "kq"
     it "prints Ap S (Ap K K) as \"s(kk)\"" $ show (Ap S (Ap K K)) `shouldBe` "s(kk)"
     it "prints Ap (Ap S K) K as \"skk\"" $ show (Ap (Ap S K) K) `shouldBe` "skk"
+    it "prints Char 'x' as \"x\"" $ show (Char 'x') `shouldBe` "x"
+    it "prints Char 'y' as \"y\"" $ show (Char 'y') `shouldBe` "y"
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m ()" $ do
