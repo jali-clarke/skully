@@ -16,7 +16,7 @@ data Skully a where
     L :: Skully ((Char -> a) -> a)
     Y :: Skully ((a -> a) -> a)
     Q :: Skully (Char -> (Char -> Char -> a) -> a)
-    E :: Skully (Char -> Char -> a -> a -> a)
+    E :: Skully (Char -> Char -> a -> a -> a -> a)
     Ap :: Skully (a -> b) -> Skully a -> Skully b
     Char :: Char -> Skully Char
 

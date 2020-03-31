@@ -91,8 +91,12 @@ Takes a Char and a callback, and applies the callback to the predecessor and suc
 ### e
 
 ```
-e :: forall a. Char -> Char -> a -> a -> a
-e c0 c1 a0 a1 = if c0 == c1 then a0 else a1
+e :: forall a. Char -> Char -> a -> a -> a -> a
+e c0 c1 al ae ag =
+    case c0 `compare` c1 of
+        LT -> al
+        EQ -> ae
+        GT -> ag
 ```
 
-Takes two chars and two expressions.  If the chars are equal, it returns the first expression.  If the chars are not equal, it returns the second expression (Church encoding of Bools).
+Takes two chars and three expressions.  If the first char is less than the second, return the first expression.  If they are equal, return the second expression.  If the first is greater than the second, return the third expression.
