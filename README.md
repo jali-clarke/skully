@@ -1,6 +1,6 @@
 # skully
 
-A super simple, Turing-complete language + interpreter (+ compiler eventually?  maybe) based around a lazily evaluated, polymorphically typed [SK combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus).  Not at all designed to be written by hand.  Looks awfully similar to [Unlambda](https://en.wikipedia.org/wiki/Unlambda).
+A super simple, Turing-complete language + interpreter (+ compiler eventually?  maybe) based around a lazily evaluated (sorta), polymorphically typed [SK combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus).  Not at all designed to be written by hand.  Looks awfully similar to [Unlambda](https://en.wikipedia.org/wiki/Unlambda).
 
 Very much a WIP.
 
@@ -100,3 +100,11 @@ e c0 c1 al ae ag =
 ```
 
 Takes two chars and three expressions.  If the first char is less than the second, return the first expression.  If they are equal, return the second expression.  If the first is greater than the second, return the third expression.
+
+## Evaluation model
+
+Evaluation is done more or less lazily, in that expressions are reduced from the outside in.  In general, an expression of the form `f x` is evaluated by doing `eval ((eval f) x)`; expression reduction occurs from the outside in.
+
+An example would be: `eval ((K a b) c) == eval (a c)` - note that `b` is completely ignored in this case.  Any side effects arising from evaluating `b` never materialize.  Further, if the reduction of `a c` ends up ignoring `c` entirely, the side effects arising from evaluating `c` never materialize.
+
+Another example is `eval (S a b) == S a b`.  Since `S a b` cannot be further reduced from the outside in, there's nothing else to do.  The side effects arising from reducing `a` and `b` never materialize.
