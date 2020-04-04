@@ -39,5 +39,5 @@ show' skully =
 instance Show (Skully a) where
     show skully = show' skully ""
 
-eval :: CharSocket m => Skully a -> m ()
-eval _ = pure ()
+eval :: CharSocket m => Skully a -> m (Skully a)
+eval expr = pure expr

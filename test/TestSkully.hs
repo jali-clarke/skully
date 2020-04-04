@@ -15,6 +15,9 @@ import Skully
 newtype FakeCharSocket a = FakeCharSocket (StateT (String, String) Maybe a)
     deriving (Functor, Applicative, Monad)
 
+runWithStreams :: (String, String) -> FakeCharSocket a -> Maybe (a, (String, String))
+runWithStreams streams (FakeCharSocket action) = runStateT action streams
+
 instance CharSocket FakeCharSocket where
     getChar = FakeCharSocket $ do
         (input, output) <- get
@@ -44,9 +47,10 @@ testShowSkully = describe "show :: Skully a -> String" $ do
     it "prints Char 'y' as \"'y'\"" $ show (Char 'y') `shouldBe` "'y'"
 
 testEvalSkully :: Spec
-testEvalSkully = describe "eval :: CharSocket m => Skully a -> m ()" $ do
-    pure ()
-                
+testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
+    it "is a no-op when evaluating Char 'x'" $ runWithStreams ("", "") (fmap show . eval $ Char 'x') `shouldBe` Just ("'x'", ("", ""))
+    it "is a no-op when evaluating S" $ runWithStreams ("", "") (fmap show . eval $ S) `shouldBe` Just ("s", ("", ""))
+
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do
     testShowSkully
