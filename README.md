@@ -108,3 +108,5 @@ Evaluation is done more or less lazily, in that expressions are reduced from the
 An example would be: `eval ((K a b) c) == eval (a c)` - note that `b` is completely ignored in this case.  Any side effects arising from evaluating `b` never materialize.  Further, if the reduction of `a c` ends up ignoring `c` entirely, the side effects arising from evaluating `c` never materialize.
 
 Another example is `eval (S a b) == S a b`.  Since `S a b` cannot be further reduced from the outside in, there's nothing else to do.  The side effects arising from reducing `a` and `b` never materialize.
+
+The only exceptions to these rules are the base combinators which take arguments of type `Char`; those arguments are evaluated strictly.
