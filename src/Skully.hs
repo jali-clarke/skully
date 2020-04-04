@@ -34,7 +34,7 @@ show' skully =
             show' ex0 . case ex1 of
                 Ap _ _ -> ('(' :) . show' ex1 . (')' :)
                 _ -> show' ex1
-        Char c -> (c :)
+        Char c -> ('\'' :) . (c :) . ('\'' :)
 
 instance Show (Skully a) where
     show skully = show' skully ""
