@@ -48,8 +48,12 @@ testShowSkully = describe "show :: Skully a -> String" $ do
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
-    it "is a no-op when evaluating Char 'x'" $ runWithStreams ("", "") (fmap show . eval $ Char 'x') `shouldBe` Just ("'x'", ("", ""))
-    it "is a no-op when evaluating S" $ runWithStreams ("", "") (fmap show . eval $ S) `shouldBe` Just ("s", ("", ""))
+    it "is a no-op when evaluating Char 'x'" $
+        runWithStreams ("", "") (fmap show . eval $ Char 'x') `shouldBe` Just ("'x'", ("", ""))
+    it "is a no-op when evaluating S" $
+        runWithStreams ("", "") (fmap show . eval $ S) `shouldBe` Just ("s", ("", ""))
+    it "outputs 'x' when evaluating Ap (Ap U (Char 'x')) K" $
+        runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'x')) K) `shouldBe` Just ("k", ("", "x"))
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do

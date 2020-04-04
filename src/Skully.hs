@@ -40,4 +40,7 @@ instance Show (Skully a) where
     show skully = show' skully ""
 
 eval :: CharSocket m => Skully a -> m (Skully a)
-eval expr = pure expr
+eval expr =
+    case expr of
+        Ap (Ap U _) K -> putChar 'x' *> pure K
+        _ -> pure expr
