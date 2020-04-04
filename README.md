@@ -24,8 +24,8 @@ e :: forall a. Char -> Char -> a -> a -> a
 ## Grammar
 
 ```
-<expr> ::= s | k | u | l | y | q | e | <expr><expr> | (<expr>) | <char>
-<char> ::= (any ASCII character)
+<expr> ::= s | k | u | l | y | q | e | <expr><expr> | (<expr>) | '<char>'
+<char> ::= (any ASCII character, including escaped chars and escaped hex)
 ```
 
 Applying one expression to another is done by simply concatenating them.  Application is also left-associative; `abc == (ab)c`.
