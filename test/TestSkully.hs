@@ -58,6 +58,8 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ d
         runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'y')) K) `shouldBe` Just ("k", ("", "y"))
     it "outputs 'x' when evaluating Ap (Ap U (Char 'y')) S" $
         runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'y')) S) `shouldBe` Just ("s", ("", "y"))
+    it "outputs 'x' and then 'y' when evaluating Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)" $
+        runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)) `shouldBe` Just ("l", ("", "xy"))
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do

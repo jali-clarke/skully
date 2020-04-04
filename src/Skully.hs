@@ -42,5 +42,5 @@ instance Show (Skully a) where
 eval :: CharSocket m => Skully a -> m (Skully a)
 eval expr =
     case expr of
-        Ap (Ap U (Char c)) a -> putChar c *> pure a
+        Ap (Ap U (Char c)) a -> putChar c *> eval a
         _ -> pure expr
