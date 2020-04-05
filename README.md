@@ -4,6 +4,16 @@ A super simple, Turing-complete language + interpreter (+ compiler eventually?  
 
 Very much a WIP.
 
+## Hello world!
+
+Could be worse:
+
+```
+u'H'(u'e'(u'l'(u'l'(u'o'(u' '(u'w'(u'o'(u'r'(u'l'(u'd'(u'!'k)))))))))))
+```
+
+Have a look at the other sections in this readme to see what exactly is going on up there.
+
 ## Types
 
 Not going to formally / rigorously specify anything; this is borrowed from Haskell's syntax.
