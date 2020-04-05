@@ -69,6 +69,12 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $
         it "outputs 'x' and then 'y' when evaluating Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)" $
             withStreamsShouldReturn ("", "") ("l", ("", "xy")) $
                 Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)
+        it "captures the first char from stdin and injects it when evaluating Ap L K" $
+            withStreamsShouldReturn ("x", "") ("k'x'", ("", "")) $
+                Ap L K
+        it "captures the first (different) char from stdin and injects it when evaluating Ap L U" $
+            withStreamsShouldReturn ("y", "") ("u'y'", ("", "")) $
+                Ap L U
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do
