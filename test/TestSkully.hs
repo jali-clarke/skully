@@ -47,19 +47,28 @@ testShowSkully = describe "show :: Skully a -> String" $ do
     it "prints Char 'y' as \"'y'\"" $ show (Char 'y') `shouldBe` "'y'"
 
 testEvalSkully :: Spec
-testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
-    it "is a no-op when evaluating Char 'x'" $
-        runWithStreams ("", "") (fmap show . eval $ Char 'x') `shouldBe` Just ("'x'", ("", ""))
-    it "is a no-op when evaluating S" $
-        runWithStreams ("", "") (fmap show . eval $ S) `shouldBe` Just ("s", ("", ""))
-    it "outputs 'x' when evaluating Ap (Ap U (Char 'x')) K" $
-        runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'x')) K) `shouldBe` Just ("k", ("", "x"))
-    it "outputs 'x' when evaluating Ap (Ap U (Char 'y')) K" $
-        runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'y')) K) `shouldBe` Just ("k", ("", "y"))
-    it "outputs 'x' when evaluating Ap (Ap U (Char 'y')) S" $
-        runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'y')) S) `shouldBe` Just ("s", ("", "y"))
-    it "outputs 'x' and then 'y' when evaluating Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)" $
-        runWithStreams ("", "") (fmap show . eval $ Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)) `shouldBe` Just ("l", ("", "xy"))
+testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $
+    let eval' = fmap show . eval
+        withStreamsShouldReturn initStreams expectedResult expr = runWithStreams initStreams (eval' expr) `shouldBe` Just expectedResult
+    in do
+        it "is a no-op when evaluating Char 'x'" $
+            withStreamsShouldReturn ("", "") ("'x'", ("", "")) $
+                Char 'x'
+        it "is a no-op when evaluating S" $
+            withStreamsShouldReturn ("", "") ("s", ("", "")) $
+                S
+        it "outputs 'x' when evaluating Ap (Ap U (Char 'x')) K" $
+            withStreamsShouldReturn ("", "") ("k", ("", "x")) $
+                Ap (Ap U (Char 'x')) K
+        it "outputs 'x' when evaluating Ap (Ap U (Char 'y')) K" $
+            withStreamsShouldReturn ("", "") ("k", ("", "y")) $
+                Ap (Ap U (Char 'y')) K
+        it "outputs 'x' when evaluating Ap (Ap U (Char 'y')) S" $
+            withStreamsShouldReturn ("", "") ("s", ("", "y")) $
+                Ap (Ap U (Char 'y')) S
+        it "outputs 'x' and then 'y' when evaluating Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)" $
+            withStreamsShouldReturn ("", "") ("l", ("", "xy")) $
+                Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do
