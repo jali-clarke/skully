@@ -81,6 +81,9 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $
         it "returns the first argument when evaluating Ap (Ap K U) L" $
             withStreamsShouldReturn ("", "") ("u", ("", "")) $
                 Ap (Ap K U) L
+        it "evaluates the first argument when evaluating Ap (Ap K (Ap (Ap U (Char 'x')) K)) S" $
+            withStreamsShouldReturn ("", "") ("k", ("", "x")) $
+                Ap (Ap K (Ap (Ap U (Char 'x')) K)) S
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do
