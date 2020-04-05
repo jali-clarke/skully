@@ -9,8 +9,8 @@ import Prelude hiding (getChar, putChar)
 import Test.Hspec
 import Control.Monad.State.Lazy
 
-import CharSocket
 import Skully
+import Skully.CharSocket
 
 newtype FakeCharSocket a = FakeCharSocket (StateT (String, String) Maybe a)
     deriving (Functor, Applicative, Monad)
@@ -31,59 +31,59 @@ instance CharSocket FakeCharSocket where
 
 testShowSkully :: Spec
 testShowSkully = describe "show :: Skully a -> String" $ do
-    it "prints S as \"s\"" $ show S `shouldBe` "s"
-    it "prints K as \"k\"" $ show K `shouldBe` "k"
-    it "prints U as \"u\"" $ show U `shouldBe` "u"
-    it "prints L as \"l\"" $ show L `shouldBe` "l"
-    it "prints Y as \"y\"" $ show Y `shouldBe` "y"
-    it "prints Q as \"q\"" $ show Q `shouldBe` "q"
-    it "prints E as \"e\"" $ show E `shouldBe` "e"
-    it "prints Ap S S as \"ss\"" $ show (Ap S S) `shouldBe` "ss"
-    it "prints Ap S Q as \"sq\"" $ show (Ap S Q) `shouldBe` "sq"
-    it "prints Ap K Q as \"kq\"" $ show (Ap K Q) `shouldBe` "kq"
-    it "prints Ap S (Ap K K) as \"s(kk)\"" $ show (Ap S (Ap K K)) `shouldBe` "s(kk)"
-    it "prints Ap (Ap S K) K as \"skk\"" $ show (Ap (Ap S K) K) `shouldBe` "skk"
-    it "prints Char 'x' as \"'x'\"" $ show (Char 'x') `shouldBe` "'x'"
-    it "prints Char 'y' as \"'y'\"" $ show (Char 'y') `shouldBe` "'y'"
+    it "prints s as \"s\"" $ show s `shouldBe` "s"
+    it "prints k as \"k\"" $ show k `shouldBe` "k"
+    it "prints u as \"u\"" $ show u `shouldBe` "u"
+    it "prints l as \"l\"" $ show l `shouldBe` "l"
+    it "prints y as \"y\"" $ show y `shouldBe` "y"
+    it "prints q as \"q\"" $ show q `shouldBe` "q"
+    it "prints e as \"e\"" $ show e `shouldBe` "e"
+    it "prints s .$ s as \"ss\"" $ show (s .$ s) `shouldBe` "ss"
+    it "prints s .$ q as \"sq\"" $ show (s .$ q) `shouldBe` "sq"
+    it "prints k .$ q as \"kq\"" $ show (k .$ q) `shouldBe` "kq"
+    it "prints s .$ (k .$ k) as \"s(kk)\"" $ show (s .$ (k .$ k)) `shouldBe` "s(kk)"
+    it "prints s .$ k .$ k as \"skk\"" $ show (s .$ k .$ k) `shouldBe` "skk"
+    it "prints char 'x' as \"'x'\"" $ show (char 'x') `shouldBe` "'x'"
+    it "prints char 'y' as \"'y'\"" $ show (char 'y') `shouldBe` "'y'"
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $
     let eval' = fmap show . eval
         withStreamsShouldReturn initStreams expectedResult expr = runWithStreams initStreams (eval' expr) `shouldBe` Just expectedResult
     in do
-        it "is a no-op when evaluating Char 'x'" $
+        it "is a no-op when evaluating char 'x'" $
             withStreamsShouldReturn ("", "") ("'x'", ("", "")) $
-                Char 'x'
-        it "is a no-op when evaluating S" $
+                char 'x'
+        it "is a no-op when evaluating s" $
             withStreamsShouldReturn ("", "") ("s", ("", "")) $
-                S
-        it "outputs 'x' when evaluating Ap (Ap U (Char 'x')) K" $
+                s
+        it "outputs 'x' when evaluating u .$ char 'x' .$ k" $
             withStreamsShouldReturn ("", "") ("k", ("", "x")) $
-                Ap (Ap U (Char 'x')) K
-        it "outputs 'x' when evaluating Ap (Ap U (Char 'y')) K" $
+                u .$ char 'x' .$ k
+        it "outputs 'y' when evaluating u .$ char 'y' .$ k" $
             withStreamsShouldReturn ("", "") ("k", ("", "y")) $
-                Ap (Ap U (Char 'y')) K
-        it "outputs 'x' when evaluating Ap (Ap U (Char 'y')) S" $
+                u .$ char 'y' .$ k
+        it "outputs 'y' when evaluating u .$ char 'y' .$ s" $
             withStreamsShouldReturn ("", "") ("s", ("", "y")) $
-                Ap (Ap U (Char 'y')) S
-        it "outputs 'x' and then 'y' when evaluating Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)" $
+                u .$ char 'y' .$ s
+        it "outputs 'x' and then 'y' when evaluating u .$ char 'x' .$ (u .$ char 'y' .$ l)" $
             withStreamsShouldReturn ("", "") ("l", ("", "xy")) $
-                Ap (Ap U (Char 'x')) (Ap (Ap U (Char 'y')) L)
-        it "captures the first char from stdin and injects it when evaluating Ap L K" $
+                u .$ char 'x' .$ (u .$ char 'y' .$ l)
+        it "captures the first char from stdin and injects it when evaluating l .$ k" $
             withStreamsShouldReturn ("x", "") ("k'x'", ("", "")) $
-                Ap L K
-        it "captures the first (different) char from stdin and injects it when evaluating Ap L U" $
+                l .$ k
+        it "captures the first (different) char from stdin and injects it when evaluating l .$ u" $
             withStreamsShouldReturn ("y", "") ("u'y'", ("", "")) $
-                Ap L U
-        it "returns the first argument when evaluating Ap (Ap K S) K" $
+                l .$ u
+        it "returns the first argument when evaluating k .$ s .$ k" $
             withStreamsShouldReturn ("", "") ("s", ("", "")) $
-                Ap (Ap K S) K
-        it "returns the first argument when evaluating Ap (Ap K U) (Ap (Ap U (Char 'y')) Q)" $
+                k .$ s .$ k
+        it "returns the first argument when evaluating k .$ u .$ (u .$ char 'y' .$ q)" $
             withStreamsShouldReturn ("", "") ("u", ("", "")) $
-                Ap (Ap K U) (Ap (Ap U (Char 'y')) Q)
-        it "evaluates the first argument when evaluating Ap (Ap K (Ap (Ap U (Char 'x')) K)) S" $
+                k .$ u .$ (u .$ char 'y' .$ q)
+        it "evaluates the first argument when evaluating k .$ (u .$ char 'x' .$ k) .$ s" $
             withStreamsShouldReturn ("", "") ("k", ("", "x")) $
-                Ap (Ap K (Ap (Ap U (Char 'x')) K)) S
+                k .$ (u .$ char 'x' .$ k) .$ s
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do

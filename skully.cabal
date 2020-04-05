@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 96cb3e7cb42801c2fb7a3d735b1c536ac73485a95c7be1a7c7a8ad5d67a2b7d0
+-- hash: 4a6fea31246406a1a8a53bdd10734b3f9ba47a18f69318eaf2f90d1661fe5676
 
 name:           skully
 version:        0.1.0.0
@@ -27,8 +27,9 @@ source-repository head
 
 library
   exposed-modules:
-      CharSocket
       Skully
+      Skully.CharSocket
+      Skully.Type
   other-modules:
       Paths_skully
   hs-source-dirs:

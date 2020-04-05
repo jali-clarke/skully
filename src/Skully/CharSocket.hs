@@ -1,4 +1,4 @@
-module CharSocket (
+module Skully.CharSocket (
     CharSocket(..)
 ) where
 
