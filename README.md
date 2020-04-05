@@ -12,7 +12,13 @@ Could be worse:
 u'H'(u'e'(u'l'(u'l'(u'o'(u' '(u'w'(u'o'(u'r'(u'l'(u'd'(u'!'k)))))))))))
 ```
 
-Have a look at the other sections in this readme to see what exactly is going on up there.
+or, using a more cps approach,
+
+```
+(u'H')(u'e')(u'l')(u'l')(u'o')(u' ')(u'w')(u'o')(u'r')(u'l')(u'd')(u'!')k
+```
+
+There are a number of ways to implement this.  Have a look at the other sections in this readme to see what exactly is going on up there.
 
 ## Types
 
