@@ -1,6 +1,8 @@
 {-# LANGUAGE GADTs #-}
 
 module Skully (
+    Skully,
+
     eval,
 
     s,
