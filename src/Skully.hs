@@ -26,7 +26,7 @@ eval expr =
     case expr of
         Ap (Ap K a) _ -> eval a
         Ap (Ap U (Char c)) a -> putChar c *> eval a -- not complete
-        Ap L g -> fmap (\c -> Ap g (Char c)) getChar -- not complete
+        Ap L g -> getChar >>= (\c -> eval (Ap g (Char c)))
         _ -> pure expr
 
 s :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)

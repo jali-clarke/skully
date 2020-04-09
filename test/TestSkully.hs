@@ -98,6 +98,9 @@ testEvalSkullyL = describe "eval-ing l expressions" $ do
     it "captures the first (different) char from stdin and injects it when evaluating l .$ u" $
         withStreamsShouldReturn ("y", "") ("u'y'", ("", "")) $
             l .$ u
+    it "evaluates the resulting expression after capturing the char when evaluating l .$ (k .$ s)" $
+        withStreamsShouldReturn ("a", "") ("s", ("", "")) $
+            l .$ (k .$ s)
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
