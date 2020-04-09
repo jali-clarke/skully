@@ -25,8 +25,11 @@ eval :: CharSocket m => Skully a -> m (Skully a)
 eval expr =
     case expr of
         Ap (Ap K a) _ -> eval a
-        Ap (Ap U (Char c)) a -> putChar c *> eval a -- not complete
-        Ap L g -> getChar >>= (\c -> eval (Ap g (Char c)))
+        Ap (Ap U c) a ->
+            case c of
+                Char x -> putChar x *> eval a
+                _ -> eval c >>= (\c' -> eval (Ap (Ap U c') a))
+        Ap L g -> getChar >>= (\x -> eval (Ap g (Char x)))
         _ -> pure expr
 
 s :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)

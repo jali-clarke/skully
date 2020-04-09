@@ -89,6 +89,9 @@ testEvalSkullyU = describe "eval-ing u expressions" $ do
     it "outputs 'x' and then 'y' when evaluating u .$ char 'x' .$ (u .$ char 'y' .$ l)" $
         withStreamsShouldReturn ("", "") ("l", ("", "xy")) $
             u .$ char 'x' .$ (u .$ char 'y' .$ l)
+    it "evaluates its char arg to produce a char when evaluating u .$ (k .$ char 'x' .$ k) .$ s" $
+        withStreamsShouldReturn ("", "") ("s", ("", "x")) $
+            u .$ (k .$ char 'x' .$ k) .$ s
 
 testEvalSkullyL :: Spec
 testEvalSkullyL = describe "eval-ing l expressions" $ do
