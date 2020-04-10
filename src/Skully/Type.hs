@@ -5,6 +5,8 @@ module Skully.Type (
 ) where
 
 import Prelude hiding (getChar, putChar)
+import Data.Char (ord)
+import Numeric (showHex)
 
 data Skully a where
     S :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)
@@ -31,7 +33,12 @@ show' skully =
             show' ex0 . case ex1 of
                 Ap _ _ -> ('(' :) . show' ex1 . (')' :)
                 _ -> show' ex1
-        Char c -> ('\'' :) . (c :) . ('\'' :)
+        Char c ->
+            let showCharAsHexIfNecessary =
+                    if c < '\x20' || c > '\x7e'
+                        then ('\\' :) . ('x' :) . showHex (ord c)
+                        else (c :)
+            in ('\'' :) . showCharAsHexIfNecessary . ('\'' :)
 
 instance Show (Skully a) where
     show skully = show' skully ""
