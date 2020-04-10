@@ -156,6 +156,21 @@ testEvalSkullyQ = describe "eval-ing q expressions" $ do
         withStreamsShouldReturn ("", "") ("e'\\xfe''\\xff'", ("", "")) $
             q .$ char '\xff' .$ e
 
+testEvalSkullyE :: Spec
+testEvalSkullyE = describe "eval-ing e expressions" $ do
+    it "returns the first non-char argument when the first argument is less than the second in expr e .$ char 'a' .$ char 'b' .$ char 'x' .$ char 'y' .$ char 'z'" $
+        withStreamsShouldReturn ("", "") ("'x'", ("", "")) $
+            e .$ char 'a' .$ char 'b' .$ char 'x' .$ char 'y' .$ char 'z'
+    it "returns the first non-char argument when the first argument is less than the second in expr e .$ char 't' .$ char 'u' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ char 'p'" $
+        withStreamsShouldReturn ("", "") ("'z'", ("", "")) $
+            e .$ char 't' .$ char 'u' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ char 'p'
+    it "returns and evals the second non-char argument when the first argument is equal to the second in expr e .$ char 'j' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ char 'p'" $
+        withStreamsShouldReturn ("", "") ("'y'", ("", "q")) $
+            e .$ char 'j' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ char 'p'
+    it "returns and evals the third non-char argument when the first argument is greater than the second in expr e .$ char 'k' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ (s .$ k .$ k .$ char 'c')" $
+        withStreamsShouldReturn ("", "") ("'c'", ("", "")) $
+            e .$ char 'k' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ (s .$ k .$ k .$ char 'c')
+
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
     testEvalSkullyChar
@@ -165,6 +180,7 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ d
     testEvalSkullyL
     testEvalSkullyY
     testEvalSkullyQ
+    testEvalSkullyE
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do
