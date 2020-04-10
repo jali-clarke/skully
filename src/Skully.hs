@@ -43,11 +43,17 @@ eval expr =
                         succChar = if x == '\xff' then x else succ x
                     in eval (Ap (Ap g (Char predChar)) (Char succChar))
                 _ -> eval c >>= (\c' -> eval (Ap (Ap Q c') g))
-        Ap (Ap (Ap (Ap (Ap E (Char c0)) (Char c1)) a) b) c ->
-            eval $ case c0 `compare` c1 of
-                LT -> a
-                EQ -> b
-                GT -> c
+        Ap (Ap (Ap (Ap (Ap E c0) c1) a) b) c ->
+            case (c0, c1) of
+                (Char x0, Char x1) ->
+                    eval $ case x0 `compare` x1 of
+                        LT -> a
+                        EQ -> b
+                        GT -> c
+                _ -> do
+                    c0' <- eval c0
+                    c1' <- eval c1
+                    eval (Ap (Ap (Ap (Ap (Ap E c0') c1') a) b) c)
         _ -> pure expr
 
 s :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)

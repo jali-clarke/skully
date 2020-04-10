@@ -170,6 +170,12 @@ testEvalSkullyE = describe "eval-ing e expressions" $ do
     it "returns and evals the third non-char argument when the first argument is greater than the second in expr e .$ char 'k' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ (s .$ k .$ k .$ char 'c')" $
         withStreamsShouldReturn ("", "") ("'c'", ("", "")) $
             e .$ char 'k' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ (s .$ k .$ k .$ char 'c')
+    it "evaluates its first char arg if it is not a simple char in expr e .$ (s .$ k .$ k .$ char 'x') .$ char 'y' .$ (k .$ char 'x') .$ y .$ y" $
+        withStreamsShouldReturn ("", "") ("k'x'", ("", "")) $
+            e .$ (s .$ k .$ k .$ char 'x') .$ char 'y' .$ (k .$ char 'x') .$ y .$ y
+    it "evaluates its second char arg if it is not a simple char in expr e .$ char 'x' .$ (l .$ (s .$ k .$ k)) .$ y .$ .y .$ (k .$ char 'x')" $
+        withStreamsShouldReturn ("t", "") ("k'x'", ("", "")) $
+            e .$ char 'x' .$ (l .$ (s .$ k .$ k)) .$ y .$ y .$ (k .$ char 'x')
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
