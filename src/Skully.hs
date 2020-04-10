@@ -29,8 +29,12 @@ eval expr =
         Ap (Ap U c) a ->
             case c of
                 Char x -> putChar x *> eval a
-                _ -> eval c >>= (\c' -> eval (Ap (Ap U c') a))
-        Ap L g -> getChar >>= (\x -> eval (Ap g (Char x)))
+                _ -> do
+                    c' <- eval c
+                    eval (Ap (Ap U c') a)
+        Ap L g -> do
+            x <- getChar
+            eval (Ap g (Char x))
         Ap Y g -> eval (Ap g (Ap Y g))
         Ap (Ap Q c) g ->
             case c of
