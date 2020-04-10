@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4a6fea31246406a1a8a53bdd10734b3f9ba47a18f69318eaf2f90d1661fe5676
+-- hash: c0c7261f54eeef0f5c22b08974b6f33b9e037a5ef73d7ec5f74d4064baf0352f
 
 name:           skully
 version:        0.1.0.0
@@ -55,6 +55,7 @@ test-suite skully-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Helpers
       TestSkully
       Paths_skully
   hs-source-dirs:

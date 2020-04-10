@@ -24,8 +24,12 @@ import Skully.Type
 eval :: CharSocket m => Skully a -> m (Skully a)
 eval expr =
     case expr of
+        Ap S _ -> pure expr
+        Ap (Ap S _) _ -> pure expr
         Ap (Ap (Ap S abc) ab) a -> eval (Ap (Ap abc a) (Ap ab a))
+        Ap K _ -> pure expr
         Ap (Ap K a) _ -> eval a
+        Ap U _ -> pure expr
         Ap (Ap U c) a ->
             case c of
                 Char x -> putChar x *> eval a
@@ -54,6 +58,9 @@ eval expr =
                     c0' <- eval c0
                     c1' <- eval c1
                     eval (Ap (Ap (Ap (Ap (Ap E c0') c1') a) b) c)
+        -- Ap a b -> do
+        --     a' <- eval a
+        --     eval (Ap a' b)
         _ -> pure expr
 
 s :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)

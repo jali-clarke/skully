@@ -7,6 +7,7 @@ module TestSkully (
 import Prelude hiding (getChar, putChar)
 
 import Test.Hspec
+import Helpers
 import Control.Monad.State.Lazy
 
 import Skully
@@ -86,6 +87,12 @@ testEvalSkullyS = describe "eval-ing s expressions" $ do
     it "evaluates its result when evaluating s .$ u .$ k .$ char 'x'" $ do
         withStreamsShouldReturn ("", "") ("k'x'", ("", "x")) $
             s .$ u .$ k .$ char 'x'
+    it "is a no-op when evaluated with only two arguments in s .$ k .$ k" $ do
+        withStreamsShouldReturn ("", "") ("skk", ("", "")) $
+            s .$ k .$ k
+    it "is a no-op when evaluated with only one argument in s .$ k" $ do
+        withStreamsShouldReturn ("", "") ("sk", ("", "")) $
+            s .$ k
 
 testEvalSkullyK :: Spec
 testEvalSkullyK = describe "eval-ing k expressions" $ do
@@ -98,6 +105,9 @@ testEvalSkullyK = describe "eval-ing k expressions" $ do
     it "evaluates the first argument when evaluating k .$ (u .$ char 'x' .$ k) .$ s" $
         withStreamsShouldReturn ("", "") ("k", ("", "x")) $
             k .$ (u .$ char 'x' .$ k) .$ s
+    it "is a no-op when evaluating with only one argument in k .$ (u .$ char 'x' .$ k)" $
+        withStreamsShouldReturn ("", "") ("k(u'x'k)", ("", "")) $
+            k .$ (u .$ char 'x' .$ k)
 
 testEvalSkullyU :: Spec
 testEvalSkullyU = describe "eval-ing u expressions" $ do
@@ -116,6 +126,9 @@ testEvalSkullyU = describe "eval-ing u expressions" $ do
     it "evaluates its char arg to produce a char when evaluating u .$ (k .$ char 'x' .$ k) .$ s" $
         withStreamsShouldReturn ("", "") ("s", ("", "x")) $
             u .$ (k .$ char 'x' .$ k) .$ s
+    it "is a no-op when evaluating with only one argument in u .$ (u .$ char 'x' .$ char 'z')" $
+        withStreamsShouldReturn ("", "") ("u(u'x''z')", ("", "")) $
+            u .$ (u .$ char 'x' .$ char 'z')
 
 testEvalSkullyL :: Spec
 testEvalSkullyL = describe "eval-ing l expressions" $ do
@@ -177,6 +190,12 @@ testEvalSkullyE = describe "eval-ing e expressions" $ do
         withStreamsShouldReturn ("t", "") ("k'x'", ("", "")) $
             e .$ char 'x' .$ (l .$ (s .$ k .$ k)) .$ y .$ y .$ (k .$ char 'x')
 
+testEvalSkullyAp :: Spec
+testEvalSkullyAp = describe "eval-ing nested Ap expressions not yet covered" $ do
+    skip "not implemented; doing other no-op evals first" it "evaluates nested expression in k .$ u .$ char 'x' .$ char 'y' .$ s" $
+        withStreamsShouldReturn ("", "") ("s", ("", "y")) $
+            k .$ u .$ char 'x' .$ char 'y' .$ s
+
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
     testEvalSkullyChar
@@ -187,6 +206,7 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ d
     testEvalSkullyY
     testEvalSkullyQ
     testEvalSkullyE
+    testEvalSkullyAp
 
 testSkully :: Spec
 testSkully = describe "operations on Skully a" $ do
