@@ -31,7 +31,7 @@ eval expr =
                 Char x -> putChar x *> eval a
                 _ -> eval c >>= (\c' -> eval (Ap (Ap U c') a))
         Ap L g -> getChar >>= (\x -> eval (Ap g (Char x)))
-        Ap Y g -> pure (Ap g (Ap Y g))
+        Ap Y g -> eval (Ap g (Ap Y g))
         _ -> pure expr
 
 s :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)

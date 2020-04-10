@@ -116,6 +116,9 @@ testEvalSkullyY = describe "eval-ing y expressions" $ do
     it "passes itself into its argument when evaluating y .$ (s .$ k)" $
         withStreamsShouldReturn ("", "") ("sk(y(sk))", ("", "")) $
             y .$ (s .$ k)
+    it "passes itself into its argument and then evalutes the result when evaluating y .$ (k .$ char 'c')" $
+        withStreamsShouldReturn ("", "") ("'c'", ("", "")) $
+            y .$ (k .$ char 'c')
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
