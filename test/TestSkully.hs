@@ -62,6 +62,9 @@ testEvalSkullyS = describe "eval-ing s expressions" $ do
     it "is a no-op when evaluating s" $
         withStreamsShouldReturn ("", "") ("s", ("", "")) $
             s
+    it "uses its argument appropriately when evaluating s .$ k .$ k .$ y" $ do
+        withStreamsShouldReturn ("", "") ("y", ("", "")) $
+            s .$ k .$ k .$ y
 
 testEvalSkullyK :: Spec
 testEvalSkullyK = describe "eval-ing k expressions" $ do
