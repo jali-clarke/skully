@@ -7,7 +7,6 @@ module TestSkully (
 import Prelude hiding (getChar, putChar)
 
 import Test.Hspec
-import Helpers
 import Control.Monad.State.Lazy
 
 import Skully
@@ -168,6 +167,9 @@ testEvalSkullyQ = describe "eval-ing q expressions" $ do
     it "does not inc its char arg if it is \\xff in q .$ char '\\xff' .$ e" $
         withStreamsShouldReturn ("", "") ("e'\\xfe''\\xff'", ("", "")) $
             q .$ char '\xff' .$ e
+    it "is a no-op when evaluating with only one arg in q .$ (l .$ (s .$ k .$ k))" $
+        withStreamsShouldReturn ("", "") ("q(l(skk))", ("", "")) $
+            q .$ (l .$ (s .$ k .$ k))
 
 testEvalSkullyE :: Spec
 testEvalSkullyE = describe "eval-ing e expressions" $ do
@@ -189,12 +191,33 @@ testEvalSkullyE = describe "eval-ing e expressions" $ do
     it "evaluates its second char arg if it is not a simple char in expr e .$ char 'x' .$ (l .$ (s .$ k .$ k)) .$ y .$ .y .$ (k .$ char 'x')" $
         withStreamsShouldReturn ("t", "") ("k'x'", ("", "")) $
             e .$ char 'x' .$ (l .$ (s .$ k .$ k)) .$ y .$ y .$ (k .$ char 'x')
+    it "is a no-op when evaluated with only 4 args in e .$ char 'x' .$ char 'y' .$ k .$ k" $
+        withStreamsShouldReturn ("", "") ("e'x''y'kk", ("", "")) $
+            e .$ char 'x' .$ char 'y' .$ k .$ k
+    it "is a no-op when evaluated with only 3 args in e .$ char 'x' .$ (u .$ char 'z' .$ char 'y') .$ k" $
+        withStreamsShouldReturn ("", "") ("e'x'(u'z''y')k", ("", "")) $
+            e .$ char 'x' .$ (u .$ char 'z' .$ char 'y') .$ k
+    it "is a no-op when evaluated with only 2 args in e .$ char 'x' .$ (u .$ char 'z' .$ char 'y')" $
+        withStreamsShouldReturn ("", "") ("e'x'(u'z''y')", ("", "")) $
+            e .$ char 'x' .$ (u .$ char 'z' .$ char 'y')
+    it "is a no-op when evaluated with only 1 arg in e .$ char 'x'" $
+        withStreamsShouldReturn ("", "") ("e'x'", ("", "")) $
+            e .$ char 'x'
 
 testEvalSkullyAp :: Spec
 testEvalSkullyAp = describe "eval-ing nested Ap expressions not yet covered" $ do
-    skip "not implemented; doing other no-op evals first" it "evaluates nested expression in k .$ u .$ char 'x' .$ char 'y' .$ s" $
+    it "evaluates nested expression in k .$ u .$ char 'x' .$ char 'y' .$ s" $
         withStreamsShouldReturn ("", "") ("s", ("", "y")) $
             k .$ u .$ char 'x' .$ char 'y' .$ s
+    it "does hello world example 1" $
+        withStreamsShouldReturn ("", "") ("k", ("", "Hello world!")) $
+            let skullyPutChar c = u .$ char c
+            in foldr (.$) k (fmap skullyPutChar "Hello world!")
+    it "does hello world example 2" $
+        withStreamsShouldReturn ("", "") ("k", ("", "Hello world!")) $
+            let skullyPutChar c = u .$ char c
+            in skullyPutChar 'H' .$ skullyPutChar 'e' .$ skullyPutChar 'l' .$ skullyPutChar 'l' .$ skullyPutChar 'o' .$ skullyPutChar ' ' .$
+                skullyPutChar 'w' .$ skullyPutChar 'o' .$ skullyPutChar 'r' .$ skullyPutChar 'l' .$ skullyPutChar 'd' .$ skullyPutChar '!' .$ k
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do

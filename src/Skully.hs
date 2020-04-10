@@ -58,6 +58,14 @@ eval expr =
         Ap (Ap S _) _ -> pure expr
         Ap K _ -> pure expr
         Ap U _ -> pure expr
+        Ap Q _ -> pure expr
+        Ap E _ -> pure expr
+        Ap (Ap E _) _ -> pure expr
+        Ap (Ap (Ap E _) _) _ -> pure expr
+        Ap (Ap (Ap (Ap E _) _) _) _ -> pure expr
+        Ap a b -> do
+            a' <- eval a
+            eval (Ap a' b)
         _ -> pure expr
 
 s :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)
