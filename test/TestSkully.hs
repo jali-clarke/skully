@@ -65,6 +65,9 @@ testEvalSkullyS = describe "eval-ing s expressions" $ do
     it "uses its argument appropriately when evaluating s .$ k .$ k .$ y" $ do
         withStreamsShouldReturn ("", "") ("y", ("", "")) $
             s .$ k .$ k .$ y
+    it "evaluates its result when evaluating s .$ u .$ k .$ char 'x'" $ do
+        withStreamsShouldReturn ("", "") ("k'x'", ("", "x")) $
+            s .$ u .$ k .$ char 'x'
 
 testEvalSkullyK :: Spec
 testEvalSkullyK = describe "eval-ing k expressions" $ do

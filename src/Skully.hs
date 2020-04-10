@@ -24,7 +24,7 @@ import Skully.Type
 eval :: CharSocket m => Skully a -> m (Skully a)
 eval expr =
     case expr of
-        Ap (Ap (Ap S K) _) a -> pure a
+        Ap (Ap (Ap S abc) ab) a -> eval (Ap (Ap abc a) (Ap ab a))
         Ap (Ap K a) _ -> eval a
         Ap (Ap U c) a ->
             case c of
