@@ -34,7 +34,7 @@ eval expr =
         Ap Y g -> eval (Ap g (Ap Y g))
         Ap (Ap Q c) g ->
             case c of
-                Char x -> pure (Ap (Ap g (Char (pred x))) (Char (succ x)))
+                Char x -> eval (Ap (Ap g (Char (pred x))) (Char (succ x)))
                 _ -> eval c >>= (\c' -> eval (Ap (Ap Q c') g))
         _ -> pure expr
 

@@ -128,6 +128,9 @@ testEvalSkullyQ = describe "eval-ing q expressions" $ do
     it "evals its char arg when it is not a simple char in q .$ (l .$ (s .$ k .$ k)) .$ e" $
         withStreamsShouldReturn ("j", "") ("e'i''k'", ("", "")) $
             q .$ (l .$ (s .$ k .$ k)) .$ e
+    it "evals its result in q .$ char 'y' .$ u" $
+        withStreamsShouldReturn ("", "") ("'z'", ("", "x")) $
+            q .$ char 'y' .$ u
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
