@@ -125,6 +125,9 @@ testEvalSkullyQ = describe "eval-ing q expressions" $ do
     it "decs and incs its char argument and passes both to its second argument when char arg is simple char in q .$ char 'c' .$ e" $
         withStreamsShouldReturn ("", "") ("e'b''d'", ("", "")) $
             q .$ char 'c' .$ e
+    it "evals its char arg when it is not a simple char in q .$ (l .$ (s .$ k .$ k)) .$ e" $
+        withStreamsShouldReturn ("j", "") ("e'i''k'", ("", "")) $
+            q .$ (l .$ (s .$ k .$ k)) .$ e
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do

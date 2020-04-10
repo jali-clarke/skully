@@ -32,7 +32,10 @@ eval expr =
                 _ -> eval c >>= (\c' -> eval (Ap (Ap U c') a))
         Ap L g -> getChar >>= (\x -> eval (Ap g (Char x)))
         Ap Y g -> eval (Ap g (Ap Y g))
-        Ap (Ap Q (Char x)) g -> pure (Ap (Ap g (Char (pred x))) (Char (succ x)))
+        Ap (Ap Q c) g ->
+            case c of
+                Char x -> pure (Ap (Ap g (Char (pred x))) (Char (succ x)))
+                _ -> eval c >>= (\c' -> eval (Ap (Ap Q c') g))
         _ -> pure expr
 
 s :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)
