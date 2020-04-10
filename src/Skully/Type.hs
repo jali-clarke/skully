@@ -5,8 +5,7 @@ module Skully.Type (
 ) where
 
 import Prelude hiding (getChar, putChar)
-import Data.Char (ord)
-import Numeric (showHex)
+import Data.Char (chr, ord)
 
 data Skully a where
     S :: Skully ((a -> b -> c) -> (a -> b) -> a -> c)
@@ -18,6 +17,12 @@ data Skully a where
     E :: Skully (Char -> Char -> a -> a -> a -> a)
     Ap :: Skully (a -> b) -> Skully a -> Skully b
     Char :: Char -> Skully Char
+
+showHex :: Int -> (String -> String)
+showHex n =
+    let (d, m) = n `divMod` 16
+        toHexChar x = if x < 10 then (chr (x + 48) :) else (chr (x + 87) :)
+    in toHexChar d . toHexChar m
 
 show' :: Skully a -> (String -> String)
 show' skully =

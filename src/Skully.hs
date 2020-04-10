@@ -34,7 +34,9 @@ eval expr =
         Ap Y g -> eval (Ap g (Ap Y g))
         Ap (Ap Q c) g ->
             case c of
-                Char x -> eval (Ap (Ap g (Char (pred x))) (Char (succ x)))
+                Char x ->
+                    let predChar = if x == '\x00' then x else pred x
+                    in eval (Ap (Ap g (Char predChar)) (Char (succ x)))
                 _ -> eval c >>= (\c' -> eval (Ap (Ap Q c') g))
         _ -> pure expr
 
