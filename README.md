@@ -41,7 +41,7 @@ e :: forall a. Char -> Char -> a -> a -> a
 
 ```
 <expr> ::= s | k | u | l | y | q | e | <expr><expr> | (<expr>) | '<char>'
-<char> ::= (any ASCII character, including escaped chars and escaped hex)
+<char> ::= (any ASCII character, including escaped chars and escaped 2-digit hex)
 ```
 
 Applying one expression to another is done by simply concatenating them.  Application is also left-associative; `abc == (ab)c`.
