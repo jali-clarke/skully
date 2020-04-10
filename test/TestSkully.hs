@@ -152,6 +152,9 @@ testEvalSkullyQ = describe "eval-ing q expressions" $ do
     it "does not dec its char arg if it is \\x00 in q .$ char '\\x00' .$ e" $
         withStreamsShouldReturn ("", "") ("e'\\x00''\\x01'", ("", "")) $
             q .$ char '\x00' .$ e
+    it "does not inc its char arg if it is \\xff in q .$ char '\\xff' .$ e" $
+        withStreamsShouldReturn ("", "") ("e'\\xfe''\\xff'", ("", "")) $
+            q .$ char '\xff' .$ e
 
 testEvalSkully :: Spec
 testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do

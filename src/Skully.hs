@@ -36,7 +36,8 @@ eval expr =
             case c of
                 Char x ->
                     let predChar = if x == '\x00' then x else pred x
-                    in eval (Ap (Ap g (Char predChar)) (Char (succ x)))
+                        succChar = if x == '\xff' then x else succ x
+                    in eval (Ap (Ap g (Char predChar)) (Char succChar))
                 _ -> eval c >>= (\c' -> eval (Ap (Ap Q c') g))
         _ -> pure expr
 
