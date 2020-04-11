@@ -8,15 +8,14 @@ module Skully.Stdlib.Containers.List (
 ) where
 
 import Skully.Base
-import Skully.Stdlib.Combinators
 
 type List b a = b -> (a -> b -> b) -> b
 
 nil :: Skully (List b a)
-nil = k
+nil = undefined
 
 cons :: Skully (a -> List b a -> List b a)
-cons = c .$ c .$ (c .$ s .$ a)
+cons = undefined
 
 withList :: Skully (List b a -> b -> (a -> b -> b) -> b)
-withList = i
+withList = undefined
