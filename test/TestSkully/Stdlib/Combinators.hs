@@ -18,6 +18,13 @@ testEvalA =
             withStreamsShouldReturn ("", "") ("s", ("", "j")) $
                 a .$ s .$ (u .$ char 'j')
 
+testEvalC :: Spec
+testEvalC =
+    describe "eval-ing c exprs" $ do
+        it "composes its callbacks and evaluates the result in c .$ (u .$ char 'h') .$ (u .$ char 'i') .$ k" $
+            withStreamsShouldReturn ("", "") ("k", ("", "hi")) $
+                c .$ (u .$ char 'h') .$ (u .$ char 'i') .$ k
+
 testEvalD :: Spec
 testEvalD =
     describe "eval-ing d exprs" $ do
@@ -49,6 +56,7 @@ testEvalSkully :: Spec
 testEvalSkully =
     describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
         testEvalA
+        testEvalC
         testEvalD
         testEvalF
         testEvalI
