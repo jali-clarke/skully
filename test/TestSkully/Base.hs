@@ -5,7 +5,7 @@ module TestSkully.Base (
 import Prelude hiding (getChar, putChar)
 
 import Test.Hspec
-import TestHelpers
+import Helpers
 
 import Skully.Base
 

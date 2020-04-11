@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module TestHelpers (
+module Helpers (
     FakeCharSocket,
     runWithStreams,
     withStreamsShouldReturn,
