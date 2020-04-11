@@ -1,6 +1,6 @@
 import Test.Hspec
 
-import TestSkullyBase (testSkullyBase)
+import TestSkully.Base (testSkullyBase)
 
 main :: IO ()
 main = hspec testSkullyBase

@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module TestSkullyBase (
+module TestSkully.Base (
     testSkullyBase
 ) where
 
