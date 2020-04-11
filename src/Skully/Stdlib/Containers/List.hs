@@ -10,7 +10,7 @@ module Skully.Stdlib.Containers.List (
 import Skully.Base
 import Skully.Stdlib.Combinators
 
-type List b a = b -> (a -> b -> b) -> b 
+type List b a = b -> (a -> b -> b) -> b
 
 nil :: Skully (List b a)
 nil = k
