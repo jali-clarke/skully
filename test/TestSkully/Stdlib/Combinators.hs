@@ -28,6 +28,13 @@ testEvalD =
             withStreamsShouldReturn ("", "") ("'p'", ("", "p")) $
                 d .$ u .$ char 'p'
 
+testEvalF :: Spec
+testEvalF =
+    describe "eval-ing f exprs" $ do
+        it "swaps the arguments to its callback and evaluates the result in f .$ u .$ char 'x' .$ (i .$ char 'y')" $
+            withStreamsShouldReturn ("", "") ("'x'", ("", "y")) $
+                f .$ u .$ char 'x' .$ (i .$ char 'y')
+
 testEvalI :: Spec
 testEvalI =
     describe "eval-ing i exprs" $ do
@@ -43,6 +50,7 @@ testEvalSkully =
     describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
         testEvalA
         testEvalD
+        testEvalF
         testEvalI
 
 testSkullyCombinators :: Spec
