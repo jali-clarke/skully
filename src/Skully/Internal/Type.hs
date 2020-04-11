@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs #-}
 
-module Skully.Type (
+module Skully.Internal.Type (
     Skully(..)
 ) where
 

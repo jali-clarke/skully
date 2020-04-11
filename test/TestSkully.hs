@@ -10,7 +10,7 @@ import Test.Hspec
 import Control.Monad.State.Lazy
 
 import Skully
-import Skully.CharSocket
+import Skully.Internal.CharSocket
 
 newtype FakeCharSocket a = FakeCharSocket (StateT (String, String) Maybe a)
     deriving (Functor, Applicative, Monad)

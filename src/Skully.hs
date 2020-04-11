@@ -18,8 +18,8 @@ module Skully (
 
 import Prelude hiding (getChar, putChar)
 
-import Skully.CharSocket
-import Skully.Type
+import Skully.Internal.CharSocket
+import Skully.Internal.Type
 
 eval :: CharSocket m => Skully a -> m (Skully a)
 eval expr =
