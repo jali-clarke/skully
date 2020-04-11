@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module TestSkully (
-    testSkully
+module TestSkullyBase (
+    testSkullyBase
 ) where
 
 import Prelude hiding (getChar, putChar)
@@ -9,7 +9,7 @@ import Prelude hiding (getChar, putChar)
 import Test.Hspec
 import Control.Monad.State.Lazy
 
-import Skully
+import Skully.Base
 import Skully.Internal.CharSocket
 
 newtype FakeCharSocket a = FakeCharSocket (StateT (String, String) Maybe a)
@@ -231,7 +231,7 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ d
     testEvalSkullyE
     testEvalSkullyAp
 
-testSkully :: Spec
-testSkully = describe "operations on Skully a" $ do
+testSkullyBase :: Spec
+testSkullyBase = describe "operations on Skully a" $ do
     testShowSkully
     testEvalSkully

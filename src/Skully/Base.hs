@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs #-}
 
-module Skully (
+module Skully.Base (
     Skully,
 
     eval,

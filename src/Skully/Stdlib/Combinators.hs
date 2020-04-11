@@ -1,6 +1,4 @@
 module Skully.Stdlib.Combinators (
-    module Skully,
-
     a,
     c,
     d,
@@ -8,7 +6,7 @@ module Skully.Stdlib.Combinators (
     i
 ) where
 
-import Skully
+import Skully.Base
 
 a :: Skully (a -> (a -> b) -> b)
 a = f .$ i
