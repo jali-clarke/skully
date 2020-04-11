@@ -117,6 +117,10 @@ e c0 c1 al ae ag =
 
 Takes two chars and three expressions.  If the first char is less than the second, return the first expression.  If they are equal, return the second expression.  If the first is greater than the second, return the third expression.
 
+## Stdlib
+
+You can access this by importing `Skully.Stdlib`; it contains some derived combinators for convenience as well as some data types such as `List`s, `Pair`s, and `Either`s.  I really don't expect anyone to use this language to do anything substantial so I'm not going to write much documentation.  Have a look at [Skully.Stdlib](./src/Skully/Stdlib) and its contained files to see what's up - the types should provide enough guidance.
+
 ## Evaluation model
 
 Evaluation is done more or less lazily, in that expressions are reduced from the outside in.  In general, an expression of the form `f x` is evaluated by doing `eval ((eval f) x)`; expression reduction occurs from the outside in.
