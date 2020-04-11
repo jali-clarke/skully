@@ -207,6 +207,7 @@ testEvalSkully = describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ d
     testEvalSkullyAp
 
 testSkullyBase :: Spec
-testSkullyBase = describe "operations on Skully a" $ do
-    testShowSkully
-    testEvalSkully
+testSkullyBase =
+    describe "Skully.Base" $ do
+        testShowSkully
+        testEvalSkully
