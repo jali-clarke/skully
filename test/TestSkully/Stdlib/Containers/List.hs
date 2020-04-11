@@ -15,8 +15,16 @@ testSkullyListNil =
             withStreamsShouldReturn ("", "") ("u", ("", "")) $
                 withList .$ nil .$ u .$ s
 
+testSkullyListCons :: Spec
+testSkullyListCons =
+    describe "withList on non-empty lists" $ do
+        it "prints all elements when given u in withList .$ (cons .$ char 'x' .$ (cons .$ char 'y' .$ nil)) .$ k .$ u" $
+            withStreamsShouldReturn ("", "") ("k", ("", "xy")) $
+                withList .$ (cons .$ char 'x' .$ (cons .$ char 'y' .$ nil)) .$ k .$ u
+
 testSkullyList :: Spec
 testSkullyList =
     describe "Skully.Stdlib.Containers.List" $ do
         describe "withList :: Skully (List b a -> b -> (a -> b -> b) -> b)" $ do
             testSkullyListNil
+            testSkullyListCons
