@@ -18,6 +18,16 @@ testEvalA =
             withStreamsShouldReturn ("", "") ("s", ("", "j")) $
                 a .$ s .$ (u .$ char 'j')
 
+testEvalD :: Spec
+testEvalD =
+    describe "eval-ing d exprs" $ do
+        it "applies its second argument to its first twice in d .$ k .$ s" $
+            withStreamsShouldReturn ("", "") ("s", ("", "")) $
+                d .$ k .$ s
+        it "evaluates its result in d .$ u .$ char 'p'" $
+            withStreamsShouldReturn ("", "") ("'p'", ("", "p")) $
+                d .$ u .$ char 'p'
+
 testEvalI :: Spec
 testEvalI =
     describe "eval-ing i exprs" $ do
@@ -32,6 +42,7 @@ testEvalSkully :: Spec
 testEvalSkully =
     describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
         testEvalA
+        testEvalD
         testEvalI
 
 testSkullyCombinators :: Spec
