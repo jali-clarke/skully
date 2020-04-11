@@ -1,5 +1,3 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-
 module TestSkully.Base (
     testSkullyBase
 ) where
@@ -7,27 +5,9 @@ module TestSkully.Base (
 import Prelude hiding (getChar, putChar)
 
 import Test.Hspec
-import Control.Monad.State.Lazy
+import TestHelpers
 
 import Skully.Base
-import Skully.Internal.CharSocket
-
-newtype FakeCharSocket a = FakeCharSocket (StateT (String, String) Maybe a)
-    deriving (Functor, Applicative, Monad)
-
-runWithStreams :: (String, String) -> FakeCharSocket a -> Maybe (a, (String, String))
-runWithStreams streams (FakeCharSocket action) = runStateT action streams
-
-instance CharSocket FakeCharSocket where
-    getChar = FakeCharSocket $ do
-        (input, output) <- get
-        case input of
-            [] -> lift Nothing
-            c : rest -> put (rest, output) *> pure c
-
-    putChar c = FakeCharSocket $ do
-        (input, output) <- get
-        put (input, output ++ [c])
 
 testShowSkully :: Spec
 testShowSkully = describe "show :: Skully a -> String" $ do
@@ -45,11 +25,6 @@ testShowSkully = describe "show :: Skully a -> String" $ do
     it "prints s .$ k .$ k as \"skk\"" $ show (s .$ k .$ k) `shouldBe` "skk"
     it "prints char 'x' as \"'x'\"" $ show (char 'x') `shouldBe` "'x'"
     it "prints char 'y' as \"'y'\"" $ show (char 'y') `shouldBe` "'y'"
-
-withStreamsShouldReturn :: (String, String) -> (String, (String, String)) -> Skully a -> Expectation
-withStreamsShouldReturn initStreams expectedResult expr =
-    let eval' = fmap show . eval
-    in runWithStreams initStreams (eval' expr) `shouldBe` Just expectedResult
 
 testEvalSkullyChar :: Spec
 testEvalSkullyChar = describe "eval-ing char expressions" $ do
