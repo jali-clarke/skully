@@ -18,4 +18,4 @@ cons :: Skully (a -> List b a -> List b a)
 cons = undefined
 
 withList :: Skully (List b a -> b -> (a -> b -> b) -> b)
-withList = undefined
+withList = k .$ k
