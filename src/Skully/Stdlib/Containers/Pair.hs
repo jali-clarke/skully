@@ -4,10 +4,11 @@ module Skully.Stdlib.Containers.Pair (
     withPair,
     pair,
 
-    fst
+    fst,
+    snd
 ) where
 
-import Prelude hiding (fst)
+import Prelude hiding (fst, snd)
 
 import Skully.Base
 import Skully.Stdlib.Combinators
@@ -22,3 +23,6 @@ pair = c .$ f .$ a
 
 fst :: Skully (Pair a a b -> a)
 fst = a .$ k
+
+snd :: Skully (Pair b a b -> b)
+snd = a .$ (f .$ k)

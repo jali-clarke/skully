@@ -2,7 +2,7 @@ module TestSkully.Stdlib.Containers.Pair (
     testSkullyPair
 ) where
 
-import Prelude hiding (fst)
+import Prelude hiding (fst, snd)
 
 import Test.Hspec
 import Helpers
@@ -31,8 +31,19 @@ testFst =
             withStreamsShouldReturn ("", "") ("y", ("", "")) $
                 fst .$ (pair .$ y .$ s)
 
+testSnd :: Spec
+testSnd =
+    describe "snd :: Skully (Pair b a b -> a)" $ do
+        it "should get the second element of the pair" $
+            withStreamsShouldReturn ("", "") ("u", ("", "")) $
+                snd .$ (pair .$ char 'x' .$ u)
+        it "should get the second element of the pair - different arguments" $
+            withStreamsShouldReturn ("", "") ("s", ("", "")) $
+                snd .$ (pair .$ y .$ s)
+
 testSkullyPair :: Spec
 testSkullyPair =
     describe "Skully.Stdlib.Containers.List" $ do
         testWithPair
         testFst
+        testSnd
