@@ -2,6 +2,8 @@ module TestSkully.Stdlib.Containers.Pair (
     testSkullyPair
 ) where
 
+import Prelude hiding (fst)
+
 import Test.Hspec
 import Helpers
 
@@ -19,7 +21,18 @@ testWithPair =
             withStreamsShouldReturn ("", "") ("y", ("", "")) $
                 withPair .$ (pair .$ (k .$ y) .$ k) .$ i
 
+testFst :: Spec
+testFst =
+    describe "fst :: Skully (Pair a a b -> a)" $ do
+        it "should get the first element of the pair" $
+            withStreamsShouldReturn ("", "") ("'x'", ("", "")) $
+                fst .$ (pair .$ char 'x' .$ u)
+        it "should get the first element of the pair - different arguments" $
+            withStreamsShouldReturn ("", "") ("y", ("", "")) $
+                fst .$ (pair .$ y .$ s)
+
 testSkullyPair :: Spec
 testSkullyPair =
-    describe "Skully.Stdlib.Containers.List" $
+    describe "Skully.Stdlib.Containers.List" $ do
         testWithPair
+        testFst

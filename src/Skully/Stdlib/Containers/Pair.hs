@@ -2,8 +2,12 @@ module Skully.Stdlib.Containers.Pair (
     Pair,
 
     withPair,
-    pair
+    pair,
+
+    fst
 ) where
+
+import Prelude hiding (fst)
 
 import Skully.Base
 import Skully.Stdlib.Combinators
@@ -15,3 +19,6 @@ withPair = i
 
 pair :: Skully (a -> b -> Pair r a b)
 pair = c .$ f .$ a
+
+fst :: Skully (Pair a a b -> a)
+fst = a .$ k
