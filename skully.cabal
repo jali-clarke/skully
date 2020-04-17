@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4278eb45fb0a4435e5ad7979050d078f1235d510dc45bcc409363d8bb6558f37
+-- hash: 39def6ee1fa0b088872a3e1fa7696261ef1c4b6563148507db90533d7019a831
 
 name:           skully
 version:        0.1.0.0
@@ -33,6 +33,7 @@ library
       Skully.Stdlib.Combinators
       Skully.Stdlib.Containers
       Skully.Stdlib.Containers.List
+      Skully.Stdlib.Containers.Pair
   other-modules:
       Paths_skully
   hs-source-dirs:
@@ -64,6 +65,7 @@ test-suite skully-test
       TestSkully.Stdlib.Combinators
       TestSkully.Stdlib.Containers
       TestSkully.Stdlib.Containers.List
+      TestSkully.Stdlib.Containers.Pair
       Paths_skully
   hs-source-dirs:
       test
