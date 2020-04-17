@@ -119,7 +119,7 @@ Takes two chars and three expressions.  If the first char is less than the secon
 
 ## Stdlib
 
-You can access this by importing `Skully.Stdlib`; it contains some derived combinators for convenience as well as some data types such as `List`s, `Pair`s, and `Either`s.  I really don't expect anyone to use this language to do anything substantial so I'm not going to write much documentation.  Have a look at [Skully.Stdlib](./src/Skully/Stdlib) and its contained files to see what's up - the types should provide enough guidance.
+You can access this by importing `Skully.Stdlib`; it contains some derived combinators for convenience as well as some data types such as `List`s, `Pair`s, and `Either`s.  I really don't expect anyone to use this language to do anything substantial so I'm not going to write much documentation.  Have a look at [Skully.Stdlib](./src/Skully/Stdlib) and its contained files to see what's up - the types should provide enough guidance.  The example program in [app/Main.hs](./app/Main.hs) uses some of these to read lines from stdin and print them reversed.
 
 ## Evaluation model
 
