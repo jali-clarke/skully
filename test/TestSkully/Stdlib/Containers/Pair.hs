@@ -41,9 +41,20 @@ testSnd =
             withStreamsShouldReturn ("", "") ("s", ("", "")) $
                 snd .$ (pair .$ y .$ s)
 
+testSwap :: Spec
+testSwap =
+    describe "swap :: Skully (Pair (Pair r b a) a b -> Pair r b a" $ do
+        it "should swap the pair entries" $
+            withStreamsShouldReturn ("", "") ("u", ("", "")) $
+                fst .$ (swap .$ (pair .$ char 'x' .$ u))
+        it "should swap the pair entries - different arguments" $
+            withStreamsShouldReturn ("", "") ("y", ("", "")) $
+                snd .$ (swap .$ (pair .$ y .$ s))
+
 testSkullyPair :: Spec
 testSkullyPair =
     describe "Skully.Stdlib.Containers.List" $ do
         testWithPair
         testFst
         testSnd
+        testSwap

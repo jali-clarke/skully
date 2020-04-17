@@ -5,7 +5,8 @@ module Skully.Stdlib.Containers.Pair (
     pair,
 
     fst,
-    snd
+    snd,
+    swap
 ) where
 
 import Prelude hiding (fst, snd)
@@ -26,3 +27,6 @@ fst = a .$ k
 
 snd :: Skully (Pair b a b -> b)
 snd = a .$ (f .$ k)
+
+swap :: Skully (Pair (Pair r b a) a b -> Pair r b a)
+swap = a .$ (f .$ pair)
