@@ -17,7 +17,4 @@ readLines :: Skully a
 readLines = y .$ (c .$ (f .$ (withList .$ (reverse .$ readLine)) .$ u) .$ (u .$ (char '\n')))
 
 main :: IO ()
-main = do
-    print readLines
-    _ <- eval readLines
-    pure ()
+main = print readLines <* eval readLines
