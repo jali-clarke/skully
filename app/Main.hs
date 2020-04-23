@@ -19,5 +19,5 @@ readLines = y .$ (c .$ (f .$ (withList .$ (reverse .$ readLine)) .$ u) .$ (u .$ 
 main :: IO ()
 main = do
     print readLines
-    _ <- eval $ readLines
+    _ <- eval readLines
     pure ()
