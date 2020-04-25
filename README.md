@@ -102,7 +102,7 @@ q :: forall a. Char -> (Char -> Char -> a) -> a
 q x g = g (x - 1) (x + 1)
 ```
 
-Takes a Char and a callback, and applies the callback to the predecessor and successor of the same Char.  This allows for construction + pattern matching on Char.  If the Char is `\x00`, its predecessor is also `\x00`.  If the Char is `\xff`, its successor is also `\xff`.
+Takes a Char and a callback, and applies the callback to the predecessor and successor of the same Char.  This allows for construction + pattern matching on Char.  We allow for overflow and underflow; if the Char is `\x00`, its predecessor is `\xff`.  If the Char is `\xff`, its successor is `\x00`.
 
 ### e
 

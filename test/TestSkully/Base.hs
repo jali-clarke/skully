@@ -144,11 +144,11 @@ testEvalSkullyQ =
         it "evals its result in q .$ char 'y' .$ u" $
             withStreamsShouldReturn ("", "") ("'z'", ("", "x")) $
                 q .$ char 'y' .$ u
-        it "does not dec its char arg if it is \\x00 in q .$ char '\\x00' .$ e" $
-            withStreamsShouldReturn ("", "") ("e'\\x00''\\x01'", ("", "")) $
+        it "underflows its char arg if it is \\x00 in q .$ char '\\x00' .$ e" $
+            withStreamsShouldReturn ("", "") ("e'\\xff''\\x01'", ("", "")) $
                 q .$ char '\x00' .$ e
-        it "does not inc its char arg if it is \\xff in q .$ char '\\xff' .$ e" $
-            withStreamsShouldReturn ("", "") ("e'\\xfe''\\xff'", ("", "")) $
+        it "overflows its char arg if it is \\xff in q .$ char '\\xff' .$ e" $
+            withStreamsShouldReturn ("", "") ("e'\\xfe''\\x00'", ("", "")) $
                 q .$ char '\xff' .$ e
         it "is a no-op when evaluating with only one arg in q .$ (l .$ (s .$ k .$ k))" $
             withStreamsShouldReturn ("", "") ("q(l(skk))", ("", "")) $

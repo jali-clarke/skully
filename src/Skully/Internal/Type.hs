@@ -69,8 +69,8 @@ eval expr =
         Ap (Ap Q c) g ->
             case c of
                 Char x ->
-                    let predChar = if x == '\x00' then x else pred x
-                        succChar = if x == '\xff' then x else succ x
+                    let predChar = if x == '\x00' then '\xff' else pred x
+                        succChar = if x == '\xff' then '\x00' else succ x
                     in eval (Ap (Ap g (Char predChar)) (Char succChar))
                 _ -> eval c >>= (\c' -> eval (Ap (Ap Q c') g))
         Ap (Ap (Ap (Ap (Ap E c0) c1) a) b) c ->
