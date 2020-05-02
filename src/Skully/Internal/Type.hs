@@ -101,4 +101,8 @@ eval expr =
         _ -> pure expr
 
 optimize :: Skully a -> Skully a
-optimize x = x
+optimize expr =
+    case expr of
+        Ap (Ap (Ap S abc) ab) a -> optimize (Ap (Ap abc a) (Ap ab a))
+        Ap (Ap K a) _ -> optimize a
+        _ -> expr

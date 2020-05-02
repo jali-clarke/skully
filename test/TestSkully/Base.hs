@@ -68,6 +68,14 @@ testEvalSkullyS =
             withStreamsShouldReturn ("", "") ("sk", ("", "")) $
                 s .$ k
 
+testOptimizeSkullyS :: Spec
+testOptimizeSkullyS =
+    describe "optimizing s expressions" $ do
+        it "is a no-op when optimizing s" $ show (optimize s) `shouldBe` "s"
+        it "evaluates its result when optimizing s .$ k .$ k .$ u" $ show (optimize $ s .$ k .$ k .$ u) `shouldBe` "u"
+        it "is a no-op when optimized with only two arguments in s .$ k .$ k" $ show (optimize $ s .$ k .$ k) `shouldBe` "skk"
+        it "is a no-op when optimized with only one argument in s .$ k" $ show (optimize $ s .$ k) `shouldBe` "sk"
+
 testEvalSkullyK :: Spec
 testEvalSkullyK =
     describe "eval-ing k expressions" $ do
@@ -83,6 +91,15 @@ testEvalSkullyK =
         it "is a no-op when evaluating with only one argument in k .$ (u .$ char 'x' .$ k)" $
             withStreamsShouldReturn ("", "") ("k(u'x'k)", ("", "")) $
                 k .$ (u .$ char 'x' .$ k)
+
+testOptimizeSkullyK :: Spec
+testOptimizeSkullyK =
+    describe "optimizing k expressions" $ do
+        it "returns the first argument when optimizing k .$ s .$ k" $ show (optimize $ k .$ s .$ k) `shouldBe` "s"
+        it "returns the first argument when optimizing k .$ u .$ (u .$ char 'y' .$ q)" $
+            show (optimize $ k .$ u .$ (u .$ char 'y' .$ q)) `shouldBe` "u"
+        it "optimizes its result in k .$ (k .$ char 'x' .$ k) .$ s" $
+            show (optimize $ k .$ (k .$ char 'x' .$ k) .$ s) `shouldBe` "'x'"
 
 testEvalSkullyU :: Spec
 testEvalSkullyU =
@@ -218,8 +235,8 @@ testOptimizeSkully :: Spec
 testOptimizeSkully =
     describe "optimize :: Skully a -> Skully a" $ do
         testOptimizeSkullyChar
-        -- testOptimizeSkullyS
-        -- testOptimizeSkullyK
+        testOptimizeSkullyS
+        testOptimizeSkullyK
         -- testOptimizeSkullyU
         -- testOptimizeSkullyL
         -- testOptimizeSkullyY
