@@ -3,6 +3,7 @@ module Skully.Internal.CharSocket (
 ) where
 
 import Prelude as P
+import qualified System.IO as P
 
 class Monad m => CharSocket m where
     getChar :: m Char
@@ -10,4 +11,7 @@ class Monad m => CharSocket m where
 
 instance CharSocket P.IO where
     getChar = P.getChar
-    putChar = P.putChar
+
+    putChar c = do
+        P.putChar c
+        P.hFlush P.stdout

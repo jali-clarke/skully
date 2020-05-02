@@ -5,21 +5,33 @@ import Prelude hiding (reverse)
 import Data.Functor (void)
 import Skully.Stdlib
 
-c2 :: Skully ((b -> c) -> (a0 -> a1 -> b) -> a0 -> a1 -> c)
-c2 = c .$ c .$ c
+string :: String -> Skully (List b Char)
+string str =
+    case str of
+        [] -> nil
+        x : rest -> cons .$ char x .$ string rest
 
-ifC :: Skully (Char -> Char -> a -> a -> a)
-ifC = c2 .$ (c .$ d) .$ (c2 .$ f .$ e)
+puts :: Skully (List a Char -> a -> a)
+puts = f .$ (c .$ f .$ withList) .$ u
 
-readLine :: Skully (List b Char)
-readLine = y .$ (c .$ l .$ (c .$ (s .$ (f .$ (f .$ ifC .$ (char '\n')) .$ nil)) .$ (f .$ cons)))
+isNewline :: Skully (Char -> a -> a -> a)
+isNewline = c .$ (c .$ d) .$ (c .$ f .$ (e .$ char '\n'))
 
-readLines :: Skully a
-readLines = y .$ (c .$ (f .$ (withList .$ (reverse .$ readLine)) .$ u) .$ (u .$ (char '\n')))
+withLine :: Skully ((List b Char -> a) -> a)
+withLine = y .$ (c .$ (c .$ l) .$ (c .$ (s .$ (c .$ s .$ (c .$ (f .$ isNewline) .$ (a .$ nil)))) .$ (c .$ (f .$ c .$ (c .$ (f .$ c .$ cons) .$ c)) .$ c)))
+
+lineBreak :: Skully (a -> a)
+lineBreak = u .$ char '\n'
+
+getLineAndReverse :: Skully (a -> a)
+getLineAndReverse = c .$ withLine .$ (c .$ (f .$ c .$ reverse) .$ (c .$ (f .$ puts) .$ (c .$ lineBreak .$ lineBreak)))
+
+program :: Skully a
+program = y .$ getLineAndReverse
 
 main :: IO ()
 main = do
-    let original = readLines
+    let original = program
     putStrLn "--- original"
     print original
 
