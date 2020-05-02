@@ -108,4 +108,6 @@ optimize expr =
         Ap S abc -> Ap S (optimize abc)
         Ap (Ap K a) _ -> optimize a
         Ap K a -> Ap K (optimize a)
+        Ap (Ap U c) a -> Ap (Ap U (optimize c)) (optimize a)
+        Ap U a -> Ap U (optimize a)
         _ -> expr

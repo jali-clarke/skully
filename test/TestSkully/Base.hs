@@ -130,6 +130,14 @@ testEvalSkullyU =
             withStreamsShouldReturn ("", "") ("u(u'x''z')", ("", "")) $
                 u .$ (u .$ char 'x' .$ char 'z')
 
+testOptimizeSkullyU :: Spec
+testOptimizeSkullyU =
+    describe "optimizing u expressions" $ do
+        it "deep-evaluates both arguments when applied to two arguments in u .$ (k .$ char 'x' .$ y) .$ (s .$ k .$ k .$ q)" $
+            show (optimize $ u .$ (k .$ char 'x' .$ y) .$ (s .$ k .$ k .$ q)) `shouldBe` "u'x'q"
+        it "deep-evaluates its argument when applied to one argument in u .$ (s .$ k .$ u .$ char 'x')" $
+            show (optimize $ u .$ (s .$ k .$ u .$ char 'x')) `shouldBe` "u'x'"
+
 testEvalSkullyL :: Spec
 testEvalSkullyL =
     describe "eval-ing l expressions" $ do
@@ -244,7 +252,7 @@ testOptimizeSkully =
         testOptimizeSkullyChar
         testOptimizeSkullyS
         testOptimizeSkullyK
-        -- testOptimizeSkullyU
+        testOptimizeSkullyU
         -- testOptimizeSkullyL
         -- testOptimizeSkullyY
         -- testOptimizeSkullyQ
