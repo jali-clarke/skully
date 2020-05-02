@@ -103,6 +103,11 @@ optimizeStep expr =
             in case cs of
                 (Char x0, Char x1) -> select (x0 `compare` x1) a b c
                 _ -> Ap (Ap (Ap (Ap (Ap E c0') c1') (optimize a)) (optimize b)) (optimize c)
+        Ap Y g ->
+            let g' = optimize g
+            in case g' of
+                Ap K a -> a
+                _ -> Ap Y g'
         Ap a b -> Ap (optimize a) (optimize b)
         _ -> expr
 

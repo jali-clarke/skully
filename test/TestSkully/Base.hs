@@ -190,6 +190,10 @@ testOptimizeSkullyY =
     describe "optimizing y expressions" $ do
         it "deep-optimizes its argument in y .$ (k .$ (s .$ k) .$ k)" $
             optimize (y .$ (k .$ (s .$ k) .$ k)) `shouldBe` y .$ (s .$ k)
+        it "optimizes away y when arg is a partially-applied k expr in y .$ (k .$ (k .$ char 'x' .$ y))" $
+            optimize (y .$ (k .$ (k .$ char 'x') .$ y)) `shouldBe` char 'x'
+        it "optimizes away y when arg is equivalent to a partially-applied k expr in y .$ (k .$ (k .$ s) .$ u)" $
+            optimize (y .$ (k .$ (k .$ s) .$ u)) `shouldBe` s
 
 testEvalSkullyQ :: Spec
 testEvalSkullyQ =
