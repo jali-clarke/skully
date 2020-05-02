@@ -104,6 +104,8 @@ optimize :: Skully a -> Skully a
 optimize expr =
     case expr of
         Ap (Ap (Ap S abc) ab) a -> optimize (Ap (Ap abc a) (Ap ab a))
+        Ap (Ap S abc) ab -> Ap (Ap S (optimize abc)) (optimize ab)
+        Ap S abc -> Ap S (optimize abc)
         Ap (Ap K a) _ -> optimize a
         Ap K a -> Ap K (optimize a)
         _ -> expr

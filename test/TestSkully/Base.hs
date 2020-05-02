@@ -75,6 +75,10 @@ testOptimizeSkullyS =
         it "evaluates its result when optimizing s .$ k .$ k .$ u" $ show (optimize $ s .$ k .$ k .$ u) `shouldBe` "u"
         it "is a no-op when optimized with only two arguments in s .$ k .$ k" $ show (optimize $ s .$ k .$ k) `shouldBe` "skk"
         it "is a no-op when optimized with only one argument in s .$ k" $ show (optimize $ s .$ k) `shouldBe` "sk"
+        it "deep-optimizes both args when optimized with only two arguments in s .$ (s .$ k .$ k .$ k) .$ (k .$ q .$ u)" $
+            show (optimize $ s .$ (s .$ k .$ k .$ k) .$ (k .$ q .$ u)) `shouldBe` "skq"
+        it "deep-optimizes arg when optimized with only one argument in s .$ (k .$ s .$ char 'x')" $
+            show (optimize $ s .$ (k .$ s .$ char 'x')) `shouldBe` "ss"
 
 testEvalSkullyK :: Spec
 testEvalSkullyK =
