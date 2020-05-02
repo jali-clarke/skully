@@ -105,13 +105,14 @@ optimizeStep expr =
                 Char x -> Ap (Ap g (Char (predChar x))) (Char (succChar x))
                 _ -> Ap (Ap Q c') (optimize g)
         Ap (Ap (Ap (Ap (Ap E c0) c1) a) b) c ->
-            case (optimize c0, optimize c1) of
+            let cs@(c0', c1') = (optimize c0, optimize c1)
+            in case cs of
                 (Char x0, Char x1) ->
                     case x0 `compare` x1 of
                         LT -> a
                         EQ -> b
                         GT -> c
-                _ -> undefined
+                _ -> Ap (Ap (Ap (Ap (Ap E c0') c1') (optimize a)) (optimize b)) (optimize c)
         Ap a b -> Ap (optimize a) (optimize b)
         _ -> expr
 

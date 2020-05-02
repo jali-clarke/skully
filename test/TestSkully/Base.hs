@@ -274,18 +274,21 @@ testOptimizeSkullyE =
             optimize (e .$ (s .$ k .$ k .$ char 'x') .$ char 'y' .$ (k .$ char 'x') .$ y .$ y) `shouldBe` k .$ char 'x'
         it "optimizes its second char arg if it is not a simple char in expr e .$ char 'x' .$ (s .$ k .$ k .$ char 't') .$ y .$ .y .$ (k .$ char 'x')" $
             optimize (e .$ char 'x' .$ (s .$ k .$ k .$ char 't') .$ y .$ y .$ (k .$ char 'x')) `shouldBe` k .$ char 'x'
-        it "deep-optimizes all args when evaluated with only 4 args in e .$ (i .$ char 'x') .$ (i .$ char 'y') .$ (i .$ k) .$ (i .$ k)" $
+        it "deep-optimizes all args when optimized with only 4 args in e .$ (i .$ char 'x') .$ (i .$ char 'y') .$ (i .$ k) .$ (i .$ k)" $
             let i = s .$ k .$ k
             in optimize (e .$ (i .$ char 'x') .$ (i .$ char 'y') .$ (i .$ k) .$ (i .$ k)) `shouldBe` e .$ char 'x' .$ char 'y' .$ k .$ k
-        it "deep-optimizes when evaluated with only 3 args in e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y') .$ (i .$ k)" $
+        it "deep-optimizes when optimized with only 3 args in e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y') .$ (i .$ k)" $
             let i = s .$ k .$ k
             in optimize (e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y') .$ (i .$ k)) `shouldBe` e .$ char 'x' .$ char 'z' .$ k
-        it "deep-optimizes when evaluated with only 2 args in e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y')" $
+        it "deep-optimizes when optimized with only 2 args in e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y')" $
             let i = s .$ k .$ k
             in optimize (e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y')) `shouldBe` e .$ char 'x' .$ char 'z'
-        it "deep-optimizes when evaluated with only 1 arg in e .$ (i .$ char 'x')" $
+        it "deep-optimizes when optimized with only 1 arg in e .$ (i .$ char 'x')" $
             let i = s .$ k .$ k
             in optimize (e .$ (i .$ char 'x')) `shouldBe` e .$ char 'x'
+        it "deep-optimizes all args when optimized with non-optimizable chars in e .$ (i .$ l .$ i) .$ (i .$ l .$ i) .$ (i .$ k) .$ (i .$ k) .$ (i .$ k)" $
+            let i = s .$ k .$ k
+            in optimize (e .$ (i .$ l .$ i) .$ (i .$ l .$ i) .$ (i .$ k) .$ (i .$ k) .$ (i .$ k)) `shouldBe` e .$ (l .$ i) .$ (l .$ i) .$ k .$ k .$ k
 
 testEvalSkullyAp :: Spec
 testEvalSkullyAp =
