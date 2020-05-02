@@ -151,6 +151,11 @@ testEvalSkullyL =
             withStreamsShouldReturn ("a", "") ("s", ("", "")) $
                 l .$ (k .$ s)
 
+testOptimizeSkullyL :: Spec
+testOptimizeSkullyL =
+    describe "optimizes l expressions" $ do
+        it "deep-optimzes its argument in l .$ (k .$ k .$ q)" $ show (optimize $ l .$ (k .$ k .$ q)) `shouldBe` "lk"
+
 testEvalSkullyY :: Spec
 testEvalSkullyY =
     describe "eval-ing y expressions" $ do
@@ -253,7 +258,7 @@ testOptimizeSkully =
         testOptimizeSkullyS
         testOptimizeSkullyK
         testOptimizeSkullyU
-        -- testOptimizeSkullyL
+        testOptimizeSkullyL
         -- testOptimizeSkullyY
         -- testOptimizeSkullyQ
         -- testOptimizeSkullyE
