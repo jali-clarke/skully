@@ -98,18 +98,18 @@ optimize :: Skully a -> Skully a
 optimize expr =
     case expr of
         Ap (Ap (Ap S abc) ab) a -> optimize (Ap (Ap abc a) (Ap ab a))
-        Ap (Ap S abc) ab -> Ap (Ap S (optimize abc)) (optimize ab)
-        Ap S abc -> Ap S (optimize abc)
         Ap (Ap K a) _ -> optimize a
-        Ap K a -> Ap K (optimize a)
-        Ap (Ap U c) a -> Ap (Ap U (optimize c)) (optimize a)
-        Ap U c -> Ap U (optimize c)
-        Ap L g -> Ap L (optimize g)
         Ap (Ap Q c) g ->
             let c' = optimize c
             in case c' of
                 Char x -> optimize (Ap (Ap g (Char (predChar x))) (Char (succChar x)))
                 _ -> Ap (Ap Q c') (optimize g)
+        Ap S abc -> Ap S (optimize abc)
+        Ap (Ap S abc) ab -> Ap (Ap S (optimize abc)) (optimize ab)
+        Ap K a -> Ap K (optimize a)
+        Ap U c -> Ap U (optimize c)
+        Ap (Ap U c) a -> Ap (Ap U (optimize c)) (optimize a)
+        Ap L g -> Ap L (optimize g)
         Ap Q c -> Ap Q (optimize c)
         _ -> expr
 
