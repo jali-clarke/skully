@@ -59,7 +59,7 @@ eval expr =
             c' <- eval c
             case c' of
                 Char x -> putChar x *> eval a
-                _ -> eval (Ap (Ap U c') a)
+                _ -> undefined -- will never be reached
         Ap L g -> do
             x <- getChar
             eval (Ap g (Char x))
@@ -73,7 +73,7 @@ eval expr =
             (c0', c1') <- (,) <$> eval c0 <*> eval c1
             case (c0', c1') of
                 (Char x0, Char x1) -> eval $ select (x0 `compare` x1) a b c
-                _ -> eval (Ap (Ap (Ap (Ap (Ap E c0') c1') a) b) c)
+                _ -> undefined -- will never be reached
         Ap S _ -> pure expr
         Ap (Ap S _) _ -> pure expr
         Ap K _ -> pure expr
