@@ -70,10 +70,7 @@ eval expr =
         Ap Y g -> eval (Ap g (Ap Y g))
         Ap (Ap Q c) g ->
             case c of
-                Char x ->
-                    let predChar = if x == '\x00' then '\xff' else pred x
-                        succChar = if x == '\xff' then '\x00' else succ x
-                    in eval (Ap (Ap g (Char predChar)) (Char succChar))
+                Char x -> eval (Ap (Ap g (Char (predChar x))) (Char (succChar x)))
                 _ -> eval c >>= (\c' -> eval (Ap (Ap Q c') g))
         Ap (Ap (Ap (Ap (Ap E c0) c1) a) b) c ->
             case (c0, c1) of
@@ -114,10 +111,13 @@ optimize expr =
         Ap (Ap Q c) g ->
             let c' = optimize c
             in case c' of
-                Char x ->
-                    let predChar = if x == '\x00' then '\xff' else pred x
-                        succChar = if x == '\xff' then '\x00' else succ x
-                    in optimize (Ap (Ap g (Char predChar)) (Char succChar))
+                Char x -> optimize (Ap (Ap g (Char (predChar x))) (Char (succChar x)))
                 _ -> Ap (Ap Q c') (optimize g)
         Ap Q c -> Ap Q (optimize c)
         _ -> expr
+
+predChar :: Char -> Char
+predChar x = if x == '\x00' then '\xff' else pred x
+
+succChar :: Char -> Char
+succChar x = if x == '\xff' then '\x00' else succ x
