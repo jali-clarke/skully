@@ -4,6 +4,7 @@ module Skully.Base (
     Skully,
 
     eval,
+    optimize,
 
     s,
     k,

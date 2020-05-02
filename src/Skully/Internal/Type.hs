@@ -2,7 +2,9 @@
 
 module Skully.Internal.Type (
     Skully(..),
-    eval
+    
+    eval,
+    optimize
 ) where
 
 import Prelude hiding (getChar, putChar)
@@ -97,3 +99,6 @@ eval expr =
             a' <- eval a
             eval (Ap a' b)
         _ -> pure expr
+
+optimize :: Skully a -> Skully a
+optimize x = x

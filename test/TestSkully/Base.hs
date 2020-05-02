@@ -43,6 +43,12 @@ testEvalSkullyChar =
             withStreamsShouldReturn ("", "") ("'~'", ("", "")) $
                 char '\x7e'
 
+testOptimizeSkullyChar :: Spec
+testOptimizeSkullyChar =
+    describe "optimizing char expressions" $ do
+        it "is a no-op when optimizing char 'x'" $ show (optimize $ char 'x') `shouldBe` "'x'"
+        it "is a no-op when optimizing char '\x7e'" $ show (optimize $ char '\x7e') `shouldBe` "'~'"
+
 testEvalSkullyS :: Spec
 testEvalSkullyS =
     describe "eval-ing s expressions" $ do
@@ -208,8 +214,22 @@ testEvalSkully =
         testEvalSkullyE
         testEvalSkullyAp
 
+testOptimizeSkully :: Spec
+testOptimizeSkully =
+    describe "optimize :: Skully a -> Skully a" $ do
+        testOptimizeSkullyChar
+        -- testOptimizeSkullyS
+        -- testOptimizeSkullyK
+        -- testOptimizeSkullyU
+        -- testOptimizeSkullyL
+        -- testOptimizeSkullyY
+        -- testOptimizeSkullyQ
+        -- testOptimizeSkullyE
+        -- testOptimizeSkullyAp
+
 testSkullyBase :: Spec
 testSkullyBase =
     describe "Skully.Base" $ do
         testShowSkully
         testEvalSkully
+        testOptimizeSkully
