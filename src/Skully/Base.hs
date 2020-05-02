@@ -94,15 +94,15 @@ eval expr =
             eval (Ap a' b)
         _ -> pure expr
 
-optimize :: Skully a -> Skully a
-optimize expr =
+optimizeStep :: Skully a -> Skully a
+optimizeStep expr =
     case expr of
-        Ap (Ap (Ap S abc) ab) a -> optimize (Ap (Ap abc a) (Ap ab a))
-        Ap (Ap K a) _ -> optimize a
+        Ap (Ap (Ap S abc) ab) a -> Ap (Ap abc a) (Ap ab a)
+        Ap (Ap K a) _ -> a
         Ap (Ap Q c) g ->
             let c' = optimize c
             in case c' of
-                Char x -> optimize (Ap (Ap g (Char (predChar x))) (Char (succChar x)))
+                Char x -> Ap (Ap g (Char (predChar x))) (Char (succChar x))
                 _ -> Ap (Ap Q c') (optimize g)
         Ap S abc -> Ap S (optimize abc)
         Ap (Ap S abc) ab -> Ap (Ap S (optimize abc)) (optimize ab)
@@ -112,6 +112,11 @@ optimize expr =
         Ap L g -> Ap L (optimize g)
         Ap Q c -> Ap Q (optimize c)
         _ -> expr
+
+optimize :: Skully a -> Skully a
+optimize expr =
+    let expr' = optimizeStep expr
+    in if expr == expr' then expr' else optimize expr'
 
 predChar :: Char -> Char
 predChar x = if x == '\x00' then '\xff' else pred x
