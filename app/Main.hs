@@ -11,10 +11,10 @@ ifC :: Skully (Char -> Char -> a -> a -> a)
 ifC = c2 .$ (c .$ d) .$ (c2 .$ f .$ e)
 
 readLine :: Skully (List b Char)
-readLine = y .$ (c .$ l .$ (c .$ (s .$ (f .$ (f .$ ifC .$ (char '\n')) .$ nil)) .$ (f .$ cons)))
+readLine = y .$ (optimize $ c .$ l .$ (c .$ (s .$ (f .$ (f .$ ifC .$ (char '\n')) .$ nil)) .$ (f .$ cons)))
 
 readLines :: Skully a
-readLines = y .$ (c .$ (f .$ (withList .$ (reverse .$ readLine)) .$ u) .$ (u .$ (char '\n')))
+readLines = y .$ (optimize $ c .$ (f .$ (withList .$ (reverse .$ readLine)) .$ u) .$ (u .$ (char '\n')))
 
 main :: IO ()
 main = print readLines <* eval readLines
