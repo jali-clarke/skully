@@ -17,6 +17,9 @@ data Skully a where
     Ap :: Skully (a -> b) -> Skully a -> Skully b
     Char :: Char -> Skully Char
 
+instance Eq (Skully a) where
+    _ == _ = True
+
 instance Show (Skully a) where
     show skully = show' skully ""
 

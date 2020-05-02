@@ -33,6 +33,11 @@ testShowSkully =
         it "displays char '\\x1f' as '\\x1f' in exprs" $ show (char '\x1f') `shouldBe` "'\\x1f'"
         it "displays char '\\x7f' as '\\x7f' in exprs" $ show (char '\x7f') `shouldBe` "'\\x7f'"
 
+testEqSkully :: Spec
+testEqSkully =
+    describe "(==) :: Skully a -> Skully a -> Bool" $ do
+        it "should consider char 'x' and char 'x' to be equal" $ char 'x' `shouldBe` char 'x'
+
 testEvalSkullyChar :: Spec
 testEvalSkullyChar =
     describe "eval-ing char expressions" $ do
@@ -286,5 +291,6 @@ testSkullyBase :: Spec
 testSkullyBase =
     describe "Skully.Base" $ do
         testShowSkully
+        testEqSkully
         testEvalSkully
         testOptimizeSkully
