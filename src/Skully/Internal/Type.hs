@@ -56,8 +56,8 @@ showHex n =
 eval :: CharSocket m => Skully a -> m (Skully a)
 eval expr =
     case expr of
-        Ap (Ap (Ap S _) _) _ -> eval (pureTransform expr)
-        Ap (Ap K _) _ -> eval (pureTransform expr)
+        Ap (Ap (Ap S abc) ab) a -> eval (Ap (Ap abc a) (Ap ab a))
+        Ap (Ap K a) _ -> eval a
         Ap (Ap U c) a ->
             case c of
                 Char x -> putChar x *> eval a
@@ -103,16 +103,9 @@ eval expr =
 optimize :: Skully a -> Skully a
 optimize expr =
     case expr of
-        Ap (Ap (Ap S _) _) _ -> optimize (pureTransform expr)
-        Ap (Ap K _) _ -> optimize (pureTransform expr)
+        Ap (Ap (Ap S abc) ab) a -> optimize (Ap (Ap abc a) (Ap ab a))
         Ap (Ap S abc) ab -> Ap (Ap S (optimize abc)) (optimize ab)
         Ap S abc -> Ap S (optimize abc)
+        Ap (Ap K a) _ -> optimize a
         Ap K a -> Ap K (optimize a)
-        _ -> expr
-
-pureTransform :: Skully a -> Skully a
-pureTransform expr =
-    case expr of
-        Ap (Ap (Ap S abc) ab) a -> Ap (Ap abc a) (Ap ab a)
-        Ap (Ap K a) _ -> a
         _ -> expr
