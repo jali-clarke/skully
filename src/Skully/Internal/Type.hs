@@ -111,4 +111,13 @@ optimize expr =
         Ap (Ap U c) a -> Ap (Ap U (optimize c)) (optimize a)
         Ap U a -> Ap U (optimize a)
         Ap L g -> Ap L (optimize g)
+        Ap (Ap Q c) g ->
+            let c' = optimize c
+            in case c' of
+                Char x ->
+                    let predChar = if x == '\x00' then '\xff' else pred x
+                        succChar = if x == '\xff' then '\x00' else succ x
+                    in optimize (Ap (Ap g (Char predChar)) (Char succChar))
+                _ -> Ap (Ap Q c') (optimize g)
+        Ap Q c -> Ap Q (optimize c)
         _ -> expr

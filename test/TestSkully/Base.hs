@@ -188,6 +188,24 @@ testEvalSkullyQ =
             withStreamsShouldReturn ("", "") ("q(l(skk))", ("", "")) $
                 q .$ (l .$ (s .$ k .$ k))
 
+testOptimizeSkullyQ :: Spec
+testOptimizeSkullyQ =
+    describe "optimizing q expressions" $ do
+        it "decs and incs its char argument and passes both to its second argument when char arg is simple char in q .$ char 'c' .$ e" $
+            show (optimize $ q .$ char 'c' .$ e) `shouldBe` "e'b''d'"
+        it "optimizes its char arg when it is not a simple char in q .$ (k .$ char 'j' .$ u) .$ e" $
+            show (optimize $ q .$ (k .$ char 'j' .$ u) .$ e) `shouldBe` "e'i''k'"
+        it "optimizes its result in q .$ char 'y' .$ k" $
+            show (optimize $ q .$ char 'y' .$ k) `shouldBe` "'x'"
+        it "underflows its char arg if it is \\x00 in q .$ char '\\x00' .$ e" $
+            show (optimize $ q .$ char '\x00' .$ e) `shouldBe` "e'\\xff''\\x01'"
+        it "overflows its char arg if it is \\xff in q .$ char '\\xff' .$ e" $
+            show (optimize $ q .$ char '\xff' .$ e) `shouldBe` "e'\\xfe''\\x00'"
+        it "deep-evaluates its only arg when optimizing with only one arg in q .$ (s .$ k .$ k .$ char 'x')" $
+            show (optimize $ q .$ (s .$ k .$ k .$ char 'x')) `shouldBe` "q'x'"
+        it "deep-evaluates both args when optimizing with unoptimizable arg in q .$ (k .$ (l .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)" $
+            show (optimize $ q .$ (k .$ (l .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)) `shouldBe` "q(l(skk))e"
+
 testEvalSkullyE :: Spec
 testEvalSkullyE =
     describe "eval-ing e expressions" $ do
@@ -260,7 +278,7 @@ testOptimizeSkully =
         testOptimizeSkullyU
         testOptimizeSkullyL
         -- testOptimizeSkullyY
-        -- testOptimizeSkullyQ
+        testOptimizeSkullyQ
         -- testOptimizeSkullyE
         -- testOptimizeSkullyAp
 
