@@ -24,7 +24,7 @@ lineBreak :: Skully (a -> a)
 lineBreak = u .$ char '\n'
 
 getLineAndReverse :: Skully (a -> a)
-getLineAndReverse = c .$ withLine .$ (c .$ (f .$ c .$ reverse) .$ (c .$ (f .$ puts) .$ (c .$ lineBreak .$ lineBreak)))
+getLineAndReverse = c .$ (puts .$ string "Input line: ") .$ (c .$ withLine .$ (c .$ (c .$ (puts .$ string "Reversed  : ")) .$ (f .$ (c .$ c .$ (c .$ (f .$ puts) .$ (c .$ lineBreak .$ lineBreak))) .$ reverse)))
 
 program :: Skully a
 program = y .$ getLineAndReverse
