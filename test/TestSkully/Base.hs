@@ -275,6 +275,12 @@ testEvalSkullyAp =
                 in skullyPutChar 'H' .$ skullyPutChar 'e' .$ skullyPutChar 'l' .$ skullyPutChar 'l' .$ skullyPutChar 'o' .$ skullyPutChar ' ' .$
                     skullyPutChar 'w' .$ skullyPutChar 'o' .$ skullyPutChar 'r' .$ skullyPutChar 'l' .$ skullyPutChar 'd' .$ skullyPutChar '!' .$ k
 
+testOptimizeSkullyAp :: Spec
+testOptimizeSkullyAp =
+    describe "optimizing nested Ap expressions not yet covered" $ do
+        it "optimizes nested expression in k .$ k .$ char 'x' .$ char 'y' .$ s" $
+            optimize (k .$ k .$ char 'x' .$ char 'y' .$ s) `shouldBe` char 'y'
+
 testEvalSkully :: Spec
 testEvalSkully =
     describe "eval :: CharSocket m => Skully a -> m (Skully a)" $ do
@@ -299,7 +305,7 @@ testOptimizeSkully =
         -- testOptimizeSkullyY
         testOptimizeSkullyQ
         -- testOptimizeSkullyE
-        -- testOptimizeSkullyAp
+        testOptimizeSkullyAp
 
 testSkullyBase :: Spec
 testSkullyBase =

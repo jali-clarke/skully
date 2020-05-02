@@ -111,6 +111,7 @@ optimizeStep expr =
         Ap (Ap U c) a -> Ap (Ap U (optimize c)) (optimize a)
         Ap L g -> Ap L (optimize g)
         Ap Q c -> Ap Q (optimize c)
+        Ap a b -> Ap (optimize a) b
         _ -> expr
 
 optimize :: Skully a -> Skully a
