@@ -2,6 +2,7 @@ module Main where
 
 import Prelude hiding (reverse)
 
+import Data.Functor (void)
 import Skully.Stdlib
 
 c2 :: Skully ((b -> c) -> (a0 -> a1 -> b) -> a0 -> a1 -> c)
@@ -14,7 +15,17 @@ readLine :: Skully (List b Char)
 readLine = y .$ (c .$ l .$ (c .$ (s .$ (f .$ (f .$ ifC .$ (char '\n')) .$ nil)) .$ (f .$ cons)))
 
 readLines :: Skully a
-readLines = optimize $ y .$ (c .$ (f .$ (withList .$ (reverse .$ readLine)) .$ u) .$ (u .$ (char '\n')))
+readLines = y .$ (c .$ (f .$ (withList .$ (reverse .$ readLine)) .$ u) .$ (u .$ (char '\n')))
 
 main :: IO ()
-main = print readLines <* eval readLines
+main = do
+    let original = readLines
+    putStrLn "--- original"
+    print original
+
+    let optimized = optimize original
+    putStrLn "--- optimized"
+    print optimized
+
+    putStrLn "--- execution (input lines as necessary)"
+    void (eval optimized)
