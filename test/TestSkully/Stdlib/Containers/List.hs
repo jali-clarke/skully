@@ -14,27 +14,27 @@ testSkullyListNil :: Spec
 testSkullyListNil =
     describe "withList on nil" $ do
         it "returns its non-list argument in withList .$ nil .$ u .$ s" $
-            withStreamsShouldReturn ("", "") ("u", ("", "")) $
+            withStreamsShouldReturn ("", "") (u, ("", "")) $
                 withList .$ nil .$ u .$ s
 
 testSkullyListCons :: Spec
 testSkullyListCons =
     describe "withList on non-empty lists" $ do
         it "prints all elements when given u in withList .$ (cons .$ char 'x' .$ (cons .$ char 'y' .$ nil)) .$ k .$ u" $
-            withStreamsShouldReturn ("", "") ("k", ("", "xy")) $
+            withStreamsShouldReturn ("", "") (k, ("", "xy")) $
                 withList .$ (cons .$ char 'x' .$ (cons .$ char 'y' .$ nil)) .$ k .$ u
 
 testSkullyListReverse :: Spec
 testSkullyListReverse =
     describe "withList on reversed list" $ do
         it "does nothing if list is empty" $
-            withStreamsShouldReturn ("", "") ("k", ("", "")) $
+            withStreamsShouldReturn ("", "") (k, ("", "")) $
                 withList .$ (reverse .$ nil) .$ k .$ u
         it "prints single element in withList .$ (reverse .$ (cons .$ char 'a' .$ nil)) .$ k .$ u" $
-            withStreamsShouldReturn ("", "") ("k", ("", "a")) $
+            withStreamsShouldReturn ("", "") (k, ("", "a")) $
                 withList .$ (reverse .$ (cons .$ char 'a' .$ nil)) .$ k .$ u
         it "prints all elements in reversed list in withList .$ (reverse .$ (cons .$ char 'x' .$ (cons .$ char 'y' .$ nil))) .$ k .$ u" $
-            withStreamsShouldReturn ("", "") ("k", ("", "yx")) $
+            withStreamsShouldReturn ("", "") (k, ("", "yx")) $
                 withList .$ (reverse .$ (cons .$ char 'x' .$ (cons .$ char 'y' .$ nil))) .$ k .$ u
 
 testSkullyList :: Spec

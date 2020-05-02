@@ -15,40 +15,40 @@ testWithPair :: Spec
 testWithPair =
     describe "withPair :: Skully (Pair r a b -> (a -> b -> r) -> r)" $ do
         it "should apply its elements to its callback" $
-            withStreamsShouldReturn ("", "") ("s", ("", "x")) $
+            withStreamsShouldReturn ("", "") (s, ("", "x")) $
                 withPair .$ (pair .$ char 'x' .$ u) .$ (c .$ (c .$ (a .$ s)) .$ a)
         it "should apply its elements to its callback - different arguments" $
-            withStreamsShouldReturn ("", "") ("y", ("", "")) $
+            withStreamsShouldReturn ("", "") (y, ("", "")) $
                 withPair .$ (pair .$ (k .$ y) .$ k) .$ i
 
 testFst :: Spec
 testFst =
     describe "fst :: Skully (Pair a a b -> a)" $ do
         it "should get the first element of the pair" $
-            withStreamsShouldReturn ("", "") ("'x'", ("", "")) $
+            withStreamsShouldReturn ("", "") (char 'x', ("", "")) $
                 fst .$ (pair .$ char 'x' .$ u)
         it "should get the first element of the pair - different arguments" $
-            withStreamsShouldReturn ("", "") ("y", ("", "")) $
+            withStreamsShouldReturn ("", "") (y, ("", "")) $
                 fst .$ (pair .$ y .$ s)
 
 testSnd :: Spec
 testSnd =
     describe "snd :: Skully (Pair b a b -> a)" $ do
         it "should get the second element of the pair" $
-            withStreamsShouldReturn ("", "") ("u", ("", "")) $
+            withStreamsShouldReturn ("", "") (u, ("", "")) $
                 snd .$ (pair .$ char 'x' .$ u)
         it "should get the second element of the pair - different arguments" $
-            withStreamsShouldReturn ("", "") ("s", ("", "")) $
+            withStreamsShouldReturn ("", "") (s, ("", "")) $
                 snd .$ (pair .$ y .$ s)
 
 testSwap :: Spec
 testSwap =
     describe "swap :: Skully (Pair (Pair r b a) a b -> Pair r b a" $ do
         it "should swap the pair entries" $
-            withStreamsShouldReturn ("", "") ("u", ("", "")) $
+            withStreamsShouldReturn ("", "") (u, ("", "")) $
                 fst .$ (swap .$ (pair .$ char 'x' .$ u))
         it "should swap the pair entries - different arguments" $
-            withStreamsShouldReturn ("", "") ("y", ("", "")) $
+            withStreamsShouldReturn ("", "") (y, ("", "")) $
                 snd .$ (swap .$ (pair .$ y .$ s))
 
 testSkullyPair :: Spec
