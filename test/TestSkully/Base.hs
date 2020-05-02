@@ -37,6 +37,16 @@ testEqSkully :: Spec
 testEqSkully =
     describe "(==) :: Skully a -> Skully a -> Bool" $ do
         it "should consider char 'x' and char 'x' to be equal" $ char 'x' `shouldBe` char 'x'
+        it "should consider char 'x' and char 'y' to be unequal" $ char 'x' `shouldNotBe` char 'y'
+        it "should consider char 'z' and char 'z' to be equal" $ char 'z' `shouldBe` char 'z'
+        it "should consider char 'x' and char 'z' to be unequal" $ char 'x' `shouldNotBe` char 'z'
+        it "should consider s and s to be equal" $ s `shouldBe` s
+        it "should consider k and k to be equal" $ k `shouldBe` k
+        it "should consider u and u to be equal" $ u `shouldBe` u
+        it "should consider l and l to be equal" $ l `shouldBe` l
+        it "should consider y and y to be equal" $ y `shouldBe` y
+        it "should consider q and q to be equal" $ q `shouldBe` q
+        it "should consider e and e to be equal" $ e `shouldBe` e
 
 testEvalSkullyChar :: Spec
 testEvalSkullyChar =
