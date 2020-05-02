@@ -106,7 +106,7 @@ optimize expr =
         Ap (Ap K a) _ -> optimize a
         Ap K a -> Ap K (optimize a)
         Ap (Ap U c) a -> Ap (Ap U (optimize c)) (optimize a)
-        Ap U a -> Ap U (optimize a)
+        Ap U c -> Ap U (optimize c)
         Ap L g -> Ap L (optimize g)
         Ap (Ap Q c) g ->
             let c' = optimize c
