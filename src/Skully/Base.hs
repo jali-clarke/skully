@@ -119,7 +119,7 @@ optimizeStep expr =
 optimize :: Skully a -> Skully a
 optimize expr =
     let expr' = optimizeStep expr
-    in if expr == expr' then expr' else optimize expr'
+    in if expr == expr' then expr else optimize expr'
 
 predChar :: Char -> Char
 predChar x = if x == '\x00' then '\xff' else pred x
