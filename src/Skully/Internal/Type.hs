@@ -18,18 +18,22 @@ data Skully a where
     Char :: Char -> Skully Char
 
 instance Eq (Skully a) where
-    Char c0 == Char c1 = c0 == c1
-    S == S = True
-    K == K = True
-    U == U = True
-    L == L = True
-    Y == Y = True
-    Q == Q = True
-    E == E = True
-    _ == _ = False
+    (==) = eq
 
 instance Show (Skully a) where
     show skully = show' skully ""
+
+eq :: Skully a -> Skully b -> Bool
+eq (Char c0) (Char c1) = c0 == c1
+eq S S = True
+eq K K = True
+eq U U = True
+eq L L = True
+eq Y Y = True
+eq Q Q = True
+eq E E = True
+eq (Ap a0 b0) (Ap a1 b1) = eq a0 a1 && eq b0 b1
+eq _ _ = False
 
 show' :: Skully a -> (String -> String)
 show' skully =

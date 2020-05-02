@@ -47,6 +47,10 @@ testEqSkully =
         it "should consider y and y to be equal" $ y `shouldBe` y
         it "should consider q and q to be equal" $ q `shouldBe` q
         it "should consider e and e to be equal" $ e `shouldBe` e
+        it "should consider s .$ k and s .$ k to be equal" $ (s .$ k) `shouldBe` (s .$ k)
+        it "should consider s .$ q and s .$ k to be unequal" $ (s .$ q) `shouldNotBe` (s .$ k)
+        it "should consider s .$ k and s .$ u to be unequal" $ (s .$ k) `shouldNotBe` (s .$ u)
+        it "should consider k .$ k and k .$ u to be unequal" $ (k .$ k) `shouldNotBe` (k .$ u)
 
 testEvalSkullyChar :: Spec
 testEvalSkullyChar =
