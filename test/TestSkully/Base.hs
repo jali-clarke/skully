@@ -65,8 +65,8 @@ testEvalSkullyChar =
 testOptimizeSkullyChar :: Spec
 testOptimizeSkullyChar =
     describe "optimizing char expressions" $ do
-        it "is a no-op when optimizing char 'x'" $ (optimize $ char 'x') `shouldBe` char 'x'
-        it "is a no-op when optimizing char '\x7e'" $ (optimize $ char '\x7e') `shouldBe` char '\x7e'
+        it "is a no-op when optimizing char 'x'" $ optimize (char 'x') `shouldBe` char 'x'
+        it "is a no-op when optimizing char '\x7e'" $ optimize (char '\x7e') `shouldBe` char '\x7e'
 
 testEvalSkullyS :: Spec
 testEvalSkullyS =
@@ -91,13 +91,13 @@ testOptimizeSkullyS :: Spec
 testOptimizeSkullyS =
     describe "optimizing s expressions" $ do
         it "is a no-op when optimizing s" $ optimize s `shouldBe` s
-        it "evaluates its result when optimizing s .$ k .$ k .$ u" $ (optimize $ s .$ k .$ k .$ u) `shouldBe` u
-        it "is a no-op when optimized with only two arguments in s .$ k .$ k" $ (optimize $ s .$ k .$ k) `shouldBe` s .$ k .$ k
-        it "is a no-op when optimized with only one argument in s .$ k" $ (optimize $ s .$ k) `shouldBe` s .$ k
+        it "evaluates its result when optimizing s .$ k .$ k .$ u" $ optimize (s .$ k .$ k .$ u) `shouldBe` u
+        it "is a no-op when optimized with only two arguments in s .$ k .$ k" $ optimize (s .$ k .$ k) `shouldBe` s .$ k .$ k
+        it "is a no-op when optimized with only one argument in s .$ k" $ optimize (s .$ k) `shouldBe` s .$ k
         it "deep-optimizes both args when optimized with only two arguments in s .$ (s .$ k .$ k .$ k) .$ (k .$ q .$ u)" $
-            (optimize $ s .$ (s .$ k .$ k .$ k) .$ (k .$ q .$ u)) `shouldBe` s .$ k .$ q
+            optimize (s .$ (s .$ k .$ k .$ k) .$ (k .$ q .$ u)) `shouldBe` s .$ k .$ q
         it "deep-optimizes arg when optimized with only one argument in s .$ (k .$ s .$ char 'x')" $
-            (optimize $ s .$ (k .$ s .$ char 'x')) `shouldBe` s .$ s
+            optimize (s .$ (k .$ s .$ char 'x')) `shouldBe` s .$ s
 
 testEvalSkullyK :: Spec
 testEvalSkullyK =
@@ -118,14 +118,14 @@ testEvalSkullyK =
 testOptimizeSkullyK :: Spec
 testOptimizeSkullyK =
     describe "optimizing k expressions" $ do
-        it "returns the first argument when optimizing k .$ s .$ k" $ (optimize $ k .$ s .$ k) `shouldBe` s
+        it "returns the first argument when optimizing k .$ s .$ k" $ optimize (k .$ s .$ k) `shouldBe` s
         it "returns the first argument when optimizing k .$ u .$ (u .$ char 'y' .$ q)" $
-            (optimize $ k .$ u .$ (u .$ char 'y' .$ q)) `shouldBe` u
+            optimize (k .$ u .$ (u .$ char 'y' .$ q)) `shouldBe` u
         it "optimizes its result in k .$ (k .$ char 'x' .$ k) .$ s" $
-            (optimize $ k .$ (k .$ char 'x' .$ k) .$ s) `shouldBe` char 'x'
-        it "is a no-op when optimizing with only one argument in k .$ u" $ (optimize $ k .$ u) `shouldBe` k .$ u
+            optimize (k .$ (k .$ char 'x' .$ k) .$ s) `shouldBe` char 'x'
+        it "is a no-op when optimizing with only one argument in k .$ u" $ optimize (k .$ u) `shouldBe` k .$ u
         it "is deep-evaluates its argument when optimizing with only one argument in k .$ (k .$ s .$ y)" $
-            (optimize $ k .$ (k .$ s .$ y)) `shouldBe` k .$ s
+            optimize (k .$ (k .$ s .$ y)) `shouldBe` k .$ s
 
 testEvalSkullyU :: Spec
 testEvalSkullyU =
@@ -153,9 +153,9 @@ testOptimizeSkullyU :: Spec
 testOptimizeSkullyU =
     describe "optimizing u expressions" $ do
         it "deep-evaluates both arguments when applied to two arguments in u .$ (k .$ char 'x' .$ y) .$ (s .$ k .$ k .$ q)" $
-            (optimize $ u .$ (k .$ char 'x' .$ y) .$ (s .$ k .$ k .$ q)) `shouldBe` u .$ char 'x' .$ q
+            optimize (u .$ (k .$ char 'x' .$ y) .$ (s .$ k .$ k .$ q)) `shouldBe` u .$ char 'x' .$ q
         it "deep-evaluates its argument when applied to one argument in u .$ (s .$ k .$ u .$ char 'x')" $
-            (optimize $ u .$ (s .$ k .$ u .$ char 'x')) `shouldBe` u .$ char 'x'
+            optimize (u .$ (s .$ k .$ u .$ char 'x')) `shouldBe` u .$ char 'x'
 
 testEvalSkullyL :: Spec
 testEvalSkullyL =
@@ -173,7 +173,7 @@ testEvalSkullyL =
 testOptimizeSkullyL :: Spec
 testOptimizeSkullyL =
     describe "optimizes l expressions" $ do
-        it "deep-optimzes its argument in l .$ (k .$ k .$ q)" $ (optimize $ l .$ (k .$ k .$ q)) `shouldBe` l .$ k
+        it "deep-optimzes its argument in l .$ (k .$ k .$ q)" $ optimize (l .$ (k .$ k .$ q)) `shouldBe` l .$ k
 
 testEvalSkullyY :: Spec
 testEvalSkullyY =
@@ -211,19 +211,19 @@ testOptimizeSkullyQ :: Spec
 testOptimizeSkullyQ =
     describe "optimizing q expressions" $ do
         it "decs and incs its char argument and passes both to its second argument when char arg is simple char in q .$ char 'c' .$ e" $
-            (optimize $ q .$ char 'c' .$ e) `shouldBe` e .$ char 'b' .$ char 'd'
+            optimize (q .$ char 'c' .$ e) `shouldBe` e .$ char 'b' .$ char 'd'
         it "optimizes its char arg when it is not a simple char in q .$ (k .$ char 'j' .$ u) .$ e" $
-            (optimize $ q .$ (k .$ char 'j' .$ u) .$ e) `shouldBe` e .$ char 'i' .$ char 'k'
+            optimize (q .$ (k .$ char 'j' .$ u) .$ e) `shouldBe` e .$ char 'i' .$ char 'k'
         it "optimizes its result in q .$ char 'y' .$ k" $
-            (optimize $ q .$ char 'y' .$ k) `shouldBe` char 'x'
+            optimize (q .$ char 'y' .$ k) `shouldBe` char 'x'
         it "underflows its char arg if it is \\x00 in q .$ char '\\x00' .$ e" $
-            (optimize $ q .$ char '\x00' .$ e) `shouldBe` e .$ char '\xff' .$ char '\x01'
+            optimize (q .$ char '\x00' .$ e) `shouldBe` e .$ char '\xff' .$ char '\x01'
         it "overflows its char arg if it is \\xff in q .$ char '\\xff' .$ e" $
-            (optimize $ q .$ char '\xff' .$ e) `shouldBe` e .$ char '\xfe' .$ char '\x00'
+            optimize (q .$ char '\xff' .$ e) `shouldBe` e .$ char '\xfe' .$ char '\x00'
         it "deep-evaluates its only arg when optimizing with only one arg in q .$ (s .$ k .$ k .$ char 'x')" $
-            (optimize $ q .$ (s .$ k .$ k .$ char 'x')) `shouldBe` q .$ char 'x'
+            optimize (q .$ (s .$ k .$ k .$ char 'x')) `shouldBe` q .$ char 'x'
         it "deep-evaluates both args when optimizing with unoptimizable arg in q .$ (k .$ (l .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)" $
-            (optimize $ q .$ (k .$ (l .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)) `shouldBe` q .$ (l .$ (s .$ k .$ k)) .$ e
+            optimize (q .$ (k .$ (l .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)) `shouldBe` q .$ (l .$ (s .$ k .$ k)) .$ e
 
 testEvalSkullyE :: Spec
 testEvalSkullyE =
@@ -258,6 +258,34 @@ testEvalSkullyE =
         it "is a no-op when evaluated with only 1 arg in e .$ char 'x'" $
             withStreamsShouldReturn ("", "") (e .$ char 'x', ("", "")) $
                 e .$ char 'x'
+
+testOptimizeSkullyE :: Spec
+testOptimizeSkullyE =
+    describe "optimizing e expressions" $ do
+        it "returns the first non-char argument when the first argument is less than the second in expr e .$ char 'a' .$ char 'b' .$ char 'x' .$ char 'y' .$ char 'z'" $
+            optimize (e .$ char 'a' .$ char 'b' .$ char 'x' .$ char 'y' .$ char 'z') `shouldBe` char 'x'
+        it "returns the first non-char argument when the first argument is less than the second in expr e .$ char 't' .$ char 'u' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ char 'p'" $
+            optimize (e .$ char 't' .$ char 'u' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ char 'p') `shouldBe` char 'z'
+        it "returns and optimizes the second non-char argument when the first argument is equal to the second in expr e .$ char 'j' .$ char 'j' .$ char 'z' .$ (k .$ char 'q' .$ char 'y') .$ char 'p'" $
+            optimize (e .$ char 'j' .$ char 'j' .$ char 'z' .$ (k .$ char 'q' .$ char 'y') .$ char 'p') `shouldBe` char 'q'
+        it "returns and optimizes the third non-char argument when the first argument is greater than the second in expr e .$ char 'k' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ (s .$ k .$ k .$ char 'c')" $
+            optimize (e .$ char 'k' .$ char 'j' .$ char 'z' .$ (u .$ char 'q' .$ char 'y') .$ (s .$ k .$ k .$ char 'c')) `shouldBe` char 'c'
+        it "optimizes its first char arg if it is not a simple char in expr e .$ (s .$ k .$ k .$ char 'x') .$ char 'y' .$ (k .$ char 'x') .$ y .$ y" $
+            optimize (e .$ (s .$ k .$ k .$ char 'x') .$ char 'y' .$ (k .$ char 'x') .$ y .$ y) `shouldBe` k .$ char 'x'
+        it "optimizes its second char arg if it is not a simple char in expr e .$ char 'x' .$ (s .$ k .$ k .$ char 't') .$ y .$ .y .$ (k .$ char 'x')" $
+            optimize (e .$ char 'x' .$ (s .$ k .$ k .$ char 't') .$ y .$ y .$ (k .$ char 'x')) `shouldBe` k .$ char 'x'
+        it "deep-optimizes all args when evaluated with only 4 args in e .$ (i .$ char 'x') .$ (i .$ char 'y') .$ (i .$ k) .$ (i .$ k)" $
+            let i = s .$ k .$ k
+            in optimize (e .$ (i .$ char 'x') .$ (i .$ char 'y') .$ (i .$ k) .$ (i .$ k)) `shouldBe` e .$ char 'x' .$ char 'y' .$ k .$ k
+        it "deep-optimizes when evaluated with only 3 args in e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y') .$ (i .$ k)" $
+            let i = s .$ k .$ k
+            in optimize (e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y') .$ (i .$ k)) `shouldBe` e .$ char 'x' .$ char 'z' .$ k
+        it "deep-optimizes when evaluated with only 2 args in e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y')" $
+            let i = s .$ k .$ k
+            in optimize (e .$ (i .$ char 'x') .$ (k .$ char 'z' .$ char 'y')) `shouldBe` e .$ char 'x' .$ char 'z'
+        it "deep-optimizes when evaluated with only 1 arg in e .$ (i .$ char 'x')" $
+            let i = s .$ k .$ k
+            in optimize (e .$ (i .$ char 'x')) `shouldBe` e .$ char 'x'
 
 testEvalSkullyAp :: Spec
 testEvalSkullyAp =
@@ -304,7 +332,7 @@ testOptimizeSkully =
         testOptimizeSkullyL
         -- testOptimizeSkullyY
         testOptimizeSkullyQ
-        -- testOptimizeSkullyE
+        testOptimizeSkullyE
         testOptimizeSkullyAp
 
 testSkullyBase :: Spec

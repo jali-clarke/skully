@@ -104,14 +104,15 @@ optimizeStep expr =
             in case c' of
                 Char x -> Ap (Ap g (Char (predChar x))) (Char (succChar x))
                 _ -> Ap (Ap Q c') (optimize g)
-        Ap S abc -> Ap S (optimize abc)
-        Ap (Ap S abc) ab -> Ap (Ap S (optimize abc)) (optimize ab)
-        Ap K a -> Ap K (optimize a)
-        Ap U c -> Ap U (optimize c)
-        Ap (Ap U c) a -> Ap (Ap U (optimize c)) (optimize a)
-        Ap L g -> Ap L (optimize g)
-        Ap Q c -> Ap Q (optimize c)
-        Ap a b -> Ap (optimize a) b
+        Ap (Ap (Ap (Ap (Ap E c0) c1) a) b) c ->
+            case (optimize c0, optimize c1) of
+                (Char x0, Char x1) ->
+                    case x0 `compare` x1 of
+                        LT -> a
+                        EQ -> b
+                        GT -> c
+                _ -> undefined
+        Ap a b -> Ap (optimize a) (optimize b)
         _ -> expr
 
 optimize :: Skully a -> Skully a
