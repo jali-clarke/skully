@@ -26,6 +26,12 @@ testShowSkully =
         it "prints s .$ k .$ k as \"skk\"" $ show (s .$ k .$ k) `shouldBe` "skk"
         it "prints char 'x' as \"'x'\"" $ show (char 'x') `shouldBe` "'x'"
         it "prints char 'y' as \"'y'\"" $ show (char 'y') `shouldBe` "'y'"
+        it "displays char '\\x11' as '\\x11' in exprs" $ show (char '\x11') `shouldBe` "'\\x11'"
+        it "displays char '\\xff' as '\\xff' in exprs" $ show (char '\xff') `shouldBe` "'\\xff'"
+        it "displays char '\\x20' as ' ' in exprs" $ show (char '\x20') `shouldBe` "' '"
+        it "displays char '\\x7e' as '~' in exprs" $ show (char '\x7e') `shouldBe` "'~'"
+        it "displays char '\\x1f' as '\\x1f' in exprs" $ show (char '\x1f') `shouldBe` "'\\x1f'"
+        it "displays char '\\x7f' as '\\x7f' in exprs" $ show (char '\x7f') `shouldBe` "'\\x7f'"
 
 testEvalSkullyChar :: Spec
 testEvalSkullyChar =
@@ -33,24 +39,9 @@ testEvalSkullyChar =
         it "is a no-op when evaluating char 'x'" $
             withStreamsShouldReturn ("", "") ("'x'", ("", "")) $
                 char 'x'
-        it "displays char '\\x11' as '\\x11' in exprs" $
-            withStreamsShouldReturn ("", "") ("'\\x11'", ("", "")) $
-                char '\x11'
-        it "displays char '\\xff' as '\\xff' in exprs" $
-            withStreamsShouldReturn ("", "") ("'\\xff'", ("", "")) $
-                char '\xff'
-        it "displays char '\\x20' as ' ' in exprs" $
-            withStreamsShouldReturn ("", "") ("' '", ("", "")) $
-                char '\x20'
-        it "displays char '\\x7e' as '~' in exprs" $
+        it "is a no-op when evaluating char '\x7e'" $
             withStreamsShouldReturn ("", "") ("'~'", ("", "")) $
                 char '\x7e'
-        it "displays char '\\x1f' as '\\x1f' in exprs" $
-            withStreamsShouldReturn ("", "") ("'\\x1f'", ("", "")) $
-                char '\x1f'
-        it "displays char '\\x7f' as '\\x7f' in exprs" $
-            withStreamsShouldReturn ("", "") ("'\\x7f'", ("", "")) $
-                char '\x7f'
 
 testEvalSkullyS :: Spec
 testEvalSkullyS =
