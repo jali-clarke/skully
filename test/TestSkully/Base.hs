@@ -160,20 +160,32 @@ testOptimizeSkullyU =
 testEvalSkullyL :: Spec
 testEvalSkullyL =
     describe "eval-ing l expressions" $ do
-        it "captures the first char from stdin and injects it when evaluating l .$ k" $
+        it "is a no-op when evaluating l" $
+            withStreamsShouldReturn ("", "") (l, ("", "")) $
+                l
+        it "is a no-op when evaluating l with one argument in l .$ char 'x'" $
+            withStreamsShouldReturn ("", "") (l .$ char 'x', ("", "")) $
+                l .$ char 'x'
+        it "captures the first char from stdin and injects it when evaluating l .$ (u .$ char 'y') .$ k" $
             withStreamsShouldReturn ("x", "") (k .$ char 'x', ("", "")) $
-                l .$ k
-        it "captures the first (different) char from stdin and injects it when evaluating l .$ u" $
+                l .$ (u .$ char 'y') .$ k
+        it "captures the first (different) char from stdin and injects it when evaluating l .$ (k .$ char 'x') .$ u" $
             withStreamsShouldReturn ("y", "") (u .$ char 'y', ("", "")) $
-                l .$ u
-        it "evaluates the resulting expression after capturing the char when evaluating l .$ (k .$ s)" $
-            withStreamsShouldReturn ("a", "") (s, ("", "")) $
-                l .$ (k .$ s)
+                l .$ (k .$ char 'x') .$ u
+        it "evaluates the resulting expression after capturing the char when evaluating  l .$ (k .$ k .$ char 'x') .$ (k .$ u)" $
+            withStreamsShouldReturn ("a", "") (u, ("", "")) $
+                l .$ (k .$ k .$ char 'x') .$ (k .$ u)
+        it "evaluates its default if stdin is closed in l .$ (u .$ char 'x' .$ k) .$ (k .$ k)" $
+            withStreamsShouldReturn ("", "") (k, ("", "x")) $
+                l .$ (u .$ char 'x' .$ k) .$ (k .$ k)
 
 testOptimizeSkullyL :: Spec
 testOptimizeSkullyL =
     describe "optimizes l expressions" $ do
-        it "deep-optimzes its argument in l .$ (k .$ k .$ q)" $ optimize (l .$ (k .$ k .$ q)) `shouldBe` l .$ k
+        it "deep-optimizes its callback argument in l .$ (u .$ char 'x') .$ (k .$ k .$ q)" $
+            optimize (l .$ (u .$ char 'x') .$ (k .$ k .$ q)) `shouldBe` l .$ (u .$ char 'x') .$ k
+        it "deep-optimizes its default argument in l .$ (s .$ k .$ k .$ u .$ char 'x') .$ k" $
+            optimize (l .$ (s .$ k .$ k .$ u .$ char 'x') .$ k) `shouldBe` l .$ (u .$ char 'x') .$ k
 
 testEvalSkullyY :: Spec
 testEvalSkullyY =
@@ -201,9 +213,9 @@ testEvalSkullyQ =
         it "decs and incs its char argument and passes both to its second argument when char arg is simple char in q .$ char 'c' .$ e" $
             withStreamsShouldReturn ("", "") (e .$ char 'b' .$ char 'd', ("", "")) $
                 q .$ char 'c' .$ e
-        it "evals its char arg when it is not a simple char in q .$ (l .$ (s .$ k .$ k)) .$ e" $
+        it "evals its char arg when it is not a simple char in q .$ (l .$ char '~' .$ (s .$ k .$ k)) .$ e" $
             withStreamsShouldReturn ("j", "") (e .$ char 'i' .$ char 'k', ("", "")) $
-                q .$ (l .$ (s .$ k .$ k)) .$ e
+                q .$ (l .$ char '~' .$ (s .$ k .$ k)) .$ e
         it "evals its result in q .$ char 'y' .$ u" $
             withStreamsShouldReturn ("", "") (char 'z', ("", "x")) $
                 q .$ char 'y' .$ u
@@ -213,9 +225,9 @@ testEvalSkullyQ =
         it "overflows its char arg if it is \\xff in q .$ char '\\xff' .$ e" $
             withStreamsShouldReturn ("", "") (e .$ char '\xfe' .$ char '\x00', ("", "")) $
                 q .$ char '\xff' .$ e
-        it "is a no-op when evaluating with only one arg in q .$ (l .$ (s .$ k .$ k))" $
-            withStreamsShouldReturn ("", "") (q .$ (l .$ (s .$ k .$ k)), ("", "")) $
-                q .$ (l .$ (s .$ k .$ k))
+        it "is a no-op when evaluating with only one arg in q .$ (l .$ char '~' .$ (s .$ k .$ k))" $
+            withStreamsShouldReturn ("", "") (q .$ (l .$ char '~' .$ (s .$ k .$ k)), ("", "")) $
+                q .$ (l .$ char '~' .$ (s .$ k .$ k))
 
 testOptimizeSkullyQ :: Spec
 testOptimizeSkullyQ =
@@ -232,8 +244,8 @@ testOptimizeSkullyQ =
             optimize (q .$ char '\xff' .$ e) `shouldBe` e .$ char '\xfe' .$ char '\x00'
         it "deep-evaluates its only arg when optimizing with only one arg in q .$ (s .$ k .$ k .$ char 'x')" $
             optimize (q .$ (s .$ k .$ k .$ char 'x')) `shouldBe` q .$ char 'x'
-        it "deep-evaluates both args when optimizing with unoptimizable arg in q .$ (k .$ (l .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)" $
-            optimize (q .$ (k .$ (l .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)) `shouldBe` q .$ (l .$ (s .$ k .$ k)) .$ e
+        it "deep-evaluates both args when optimizing with unoptimizable arg in q .$ (k .$ (l .$ char '~' .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)" $
+            optimize (q .$ (k .$ (l .$ char '~' .$ (s .$ k .$ k)) .$ u) .$ (s .$ k .$ k .$ e)) `shouldBe` q .$ (l .$ char '~' .$ (s .$ k .$ k)) .$ e
 
 testEvalSkullyE :: Spec
 testEvalSkullyE =
@@ -253,9 +265,9 @@ testEvalSkullyE =
         it "evaluates its first char arg if it is not a simple char in expr e .$ (s .$ k .$ k .$ char 'x') .$ char 'y' .$ (k .$ char 'x') .$ y .$ y" $
             withStreamsShouldReturn ("", "") (k .$ char 'x', ("", "")) $
                 e .$ (s .$ k .$ k .$ char 'x') .$ char 'y' .$ (k .$ char 'x') .$ y .$ y
-        it "evaluates its second char arg if it is not a simple char in expr e .$ char 'x' .$ (l .$ (s .$ k .$ k)) .$ y .$ .y .$ (k .$ char 'x')" $
+        it "evaluates its second char arg if it is not a simple char in expr e .$ char 'x' .$ (l .$ char 'w' .$ (s .$ k .$ k)) .$ y .$ .y .$ (k .$ char 'x')" $
             withStreamsShouldReturn ("t", "") (k .$ char 'x', ("", "")) $
-                e .$ char 'x' .$ (l .$ (s .$ k .$ k)) .$ y .$ y .$ (k .$ char 'x')
+                e .$ char 'x' .$ (l .$ char 'w' .$ (s .$ k .$ k)) .$ y .$ y .$ (k .$ char 'x')
         it "is a no-op when evaluated with only 4 args in e .$ char 'x' .$ char 'y' .$ k .$ k" $
             withStreamsShouldReturn ("", "") (e .$ char 'x' .$ char 'y' .$ k .$ k, ("", "")) $
                 e .$ char 'x' .$ char 'y' .$ k .$ k
@@ -296,9 +308,9 @@ testOptimizeSkullyE =
         it "deep-optimizes when optimized with only 1 arg in e .$ (i .$ char 'x')" $
             let i = s .$ k .$ k
             in optimize (e .$ (i .$ char 'x')) `shouldBe` e .$ char 'x'
-        it "deep-optimizes all args when optimized with non-optimizable chars in e .$ (i .$ l .$ i) .$ (i .$ l .$ i) .$ (i .$ k) .$ (i .$ k) .$ (i .$ k)" $
+        it "deep-optimizes all args when optimized with non-optimizable chars in e .$ (i .$ l .$ char 'x' .$ i) .$ (i .$ l .$ char 'x' .$ i) .$ (i .$ k) .$ (i .$ k) .$ (i .$ k)" $
             let i = s .$ k .$ k
-            in optimize (e .$ (i .$ l .$ i) .$ (i .$ l .$ i) .$ (i .$ k) .$ (i .$ k) .$ (i .$ k)) `shouldBe` e .$ (l .$ i) .$ (l .$ i) .$ k .$ k .$ k
+            in optimize (e .$ (i .$ l .$ char 'x' .$ i) .$ (i .$ l .$ char 'y' .$ i) .$ (i .$ k) .$ (i .$ k) .$ (i .$ k)) `shouldBe` e .$ (l .$ char 'x' .$ i) .$ (l .$ char 'y' .$ i) .$ k .$ k .$ k
 
 testEvalSkullyAp :: Spec
 testEvalSkullyAp =
@@ -315,6 +327,9 @@ testEvalSkullyAp =
                 let skullyPutChar c = u .$ char c
                 in skullyPutChar 'H' .$ skullyPutChar 'e' .$ skullyPutChar 'l' .$ skullyPutChar 'l' .$ skullyPutChar 'o' .$ skullyPutChar ' ' .$
                     skullyPutChar 'w' .$ skullyPutChar 'o' .$ skullyPutChar 'r' .$ skullyPutChar 'l' .$ skullyPutChar 'd' .$ skullyPutChar '!' .$ k
+        it "does not loop indefinitely when stdin closed in y .$ (s .$ (k .$ (l .$ (s .$ k .$ k))) .$ (s .$ (k .$ (s .$ u)) .$ k))" $
+            withStreamsShouldReturn ("xy", "") (s .$ k .$ k, ("", "xy")) $
+                y .$ (s .$ (k .$ (l .$ (s .$ k .$ k))) .$ (s .$ (k .$ (s .$ u)) .$ k))
 
 testOptimizeSkullyAp :: Spec
 testOptimizeSkullyAp =

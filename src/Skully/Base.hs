@@ -31,7 +31,7 @@ k = K
 u :: Skully (Char -> a -> a)
 u = U
 
-l :: Skully ((Char -> a) -> a)
+l :: Skully (a -> (Char -> a) -> a)
 l = L
 
 y :: Skully ((a -> a) -> a)
@@ -60,9 +60,11 @@ eval expr =
             case c' of
                 Char x -> putChar x *> eval a
                 _ -> undefined -- will never be reached
-        Ap L g -> do
+        Ap (Ap L d) g -> do
             x <- getChar
-            eval (Ap g (Char x))
+            case x of
+                Nothing -> eval d
+                Just x' -> eval (Ap g (Char x'))
         Ap Y g -> eval (Ap g (Ap Y g))
         Ap (Ap Q c) g -> do
             c' <- eval c
@@ -78,6 +80,7 @@ eval expr =
         Ap (Ap S _) _ -> pure expr
         Ap K _ -> pure expr
         Ap U _ -> pure expr
+        Ap L _ -> pure expr
         Ap Q _ -> pure expr
         Ap E _ -> pure expr
         Ap (Ap E _) _ -> pure expr

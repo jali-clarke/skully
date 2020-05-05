@@ -18,7 +18,7 @@ isNewline :: Skully (Char -> a -> a -> a)
 isNewline = c .$ (c .$ d) .$ (c .$ f .$ (e .$ char '\n'))
 
 withLine :: Skully ((List b Char -> a) -> a)
-withLine = y .$ (c .$ (c .$ l) .$ (c .$ (s .$ (c .$ s .$ (c .$ (f .$ isNewline) .$ (a .$ nil)))) .$ (c .$ (f .$ c .$ (c .$ (f .$ c .$ cons) .$ c)) .$ c)))
+withLine = y .$ (c .$ (s .$ (c .$ l .$ (a .$ nil))) .$ (c .$ (s .$ (c .$ s .$ (c .$ (f .$ isNewline) .$ (a .$ nil)))) .$ (c .$ (f .$ c .$ (c .$ (f .$ c .$ cons) .$ c)) .$ c)))
 
 lineBreak :: Skully (a -> a)
 lineBreak = u .$ char '\n'

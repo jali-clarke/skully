@@ -31,7 +31,7 @@ type (->) :: * -> * -> *
 s :: forall a b c. (a -> b -> c) -> (a -> b) -> a -> c
 k :: forall a b. a -> b -> a
 u :: forall a. Char -> a -> a
-l :: forall a. (Char -> a) -> a
+l :: forall a. a -> (Char -> a) -> a
 y :: forall a. (a -> a) -> a
 q :: forall a. Char -> (Char -> Char -> a) -> a
 e :: forall a. Char -> Char -> a -> a -> a
@@ -80,11 +80,11 @@ Similar to `k`, but outputs the char `x` to `stdout`.  Second argument is simply
 ### l
 
 ```
-l :: forall a. (Char -> a) -> a
-l g = g (getchar())
+l :: forall a. a -> (Char -> a) -> a
+l x g = let c = getchar() in if c == EOF then x else g c
 ```
 
-Takes a callback and applies it to the character fetched from `stdin`.
+Takes a callback and default value.  A char is read from `stdin` - if the read is successful, the callback is applied to the char.  If `stdin` is at EOF, the default value is returned instead.
 
 ### y
 

@@ -3,6 +3,11 @@ import Prelude hiding (Bool, and)
 import Data.Functor (void)
 import Skully.Stdlib
 
+type Unit b = b -> b
+
+unit :: Skully (Unit b)
+unit = i
+
 type Bool b = b -> b -> b
 
 true :: Skully (Bool b)
@@ -38,11 +43,21 @@ isLowerCase = s .$ (c .$ and .$ isGreaterThanBacktick) .$ isLessThanLeftBrace
 toUpperCase :: Skully (Char -> Char)
 toUpperCase = d .$ (s .$ (c .$ ifB .$ isLowerCase) .$ capitalize)
 
-step :: Skully (a -> a)
-step = c .$ l .$ (c .$ (f .$ c .$ toUpperCase) .$ (f .$ u))
+step :: Skully (Unit b -> Unit b)
+step = c .$ (l .$ unit) .$ (c .$ (f .$ c .$ toUpperCase) .$ (f .$ u))
 
-prog :: Skully s
-prog = y .$ step
+program :: Skully (Unit b)
+program = y .$ step
 
 main :: IO ()
-main = void $ eval (optimize prog)
+main = do
+    let original = program
+    putStrLn "--- original"
+    print original
+
+    let optimized = optimize original
+    putStrLn "--- optimized"
+    print optimized
+
+    putStrLn "--- execution (input lines as necessary)"
+    void (eval optimized)
