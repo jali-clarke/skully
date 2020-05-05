@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 39def6ee1fa0b088872a3e1fa7696261ef1c4b6563148507db90533d7019a831
+-- hash: 6119b42cb294230a713ad3e05caf5c38f7cac1adce4e3b457559e00482475d02
 
 name:           skully
 version:        0.1.0.0
@@ -43,12 +43,24 @@ library
       base >=4.7 && <5
   default-language: Haskell2010
 
-executable skully-exe
+executable reverseLines
   main-is: Main.hs
   other-modules:
       Paths_skully
   hs-source-dirs:
-      app
+      examples/reverseLines
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
+  build-depends:
+      base >=4.7 && <5
+    , skully
+  default-language: Haskell2010
+
+executable uppercase
+  main-is: Main.hs
+  other-modules:
+      Paths_skully
+  hs-source-dirs:
+      examples/uppercase
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
