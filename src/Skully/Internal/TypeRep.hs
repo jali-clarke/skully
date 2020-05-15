@@ -37,7 +37,7 @@ instance Eq SomeTypeRep where
             Right _ -> True
 
 instance Show SomeTypeRep where
-    show (SomeTypeRep a) = show a
+    show (SomeTypeRep a) = ("Some " ++) . show' a $ ""
 
 show' :: TypeRep a -> (String -> String)
 show' a =
@@ -55,7 +55,7 @@ nestedShow a =
 unify :: TypeRep a -> TypeRep b -> TypeMap -> Either String TypeMap
 unify Char Char m = Right m
 unify (Char :->: Char) (Char :->: Char) m = Right m
-unify (Var n0) (Var n1) _ = Right (Map.insert (max n0 n1) (SomeTypeRep (Var (min n0 n1))) Map.empty)
+unify (Var n0) (Var n1) m = Right (Map.insert (max n0 n1) (SomeTypeRep (Var (min n0 n1))) m)
 unify (Var n) m _ = Right (Map.insert n (SomeTypeRep m) Map.empty)
 unify m (Var n) _ = Right (Map.insert n (SomeTypeRep m) Map.empty)
 unify a b _ = Left (("cannot unify " ++) . nestedShow a . (" against " ++) . nestedShow b $ "")
