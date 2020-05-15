@@ -33,6 +33,10 @@ testUnify =
             unify (Var 66) (Char :->: Char) Map.empty `shouldBe` Right (Map.insert 66 (SomeTypeRep (Char :->: Char)) Map.empty)
         it "should unify (Char :->: Char) against (Var 78) as (Var 78) ~ (Char :->: Char)" $
             unify (Char :->: Char) (Var 78) Map.empty `shouldBe` Right (Map.insert 78 (SomeTypeRep (Char :->: Char)) Map.empty)
+        it "should unify Char against Char with existing constraint" $
+            unify Char Char (Map.insert 3 (SomeTypeRep Char) Map.empty) `shouldBe` Right (Map.insert 3 (SomeTypeRep Char) Map.empty)
+        it "should unify (Char :->: Char) against (Char :->: Char) with existing constraint" $
+            unify (Char :->: Char) (Char :->: Char) (Map.insert 3 (SomeTypeRep Char) Map.empty) `shouldBe` Right (Map.insert 3 (SomeTypeRep Char) Map.empty)
 
 testSkullyTypeRep :: Spec
 testSkullyTypeRep =

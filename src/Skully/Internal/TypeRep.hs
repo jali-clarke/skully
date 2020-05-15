@@ -53,8 +53,8 @@ nestedShow a =
         _ -> show' a
 
 unify :: TypeRep a -> TypeRep b -> TypeMap -> Either String TypeMap
-unify Char Char _ = Right Map.empty
-unify (Char :->: Char) (Char :->: Char) _ = Right Map.empty
+unify Char Char m = Right m
+unify (Char :->: Char) (Char :->: Char) m = Right m
 unify (Var n0) (Var n1) _ = Right (Map.insert (max n0 n1) (SomeTypeRep (Var (min n0 n1))) Map.empty)
 unify (Var n) m _ = Right (Map.insert n (SomeTypeRep m) Map.empty)
 unify m (Var n) _ = Right (Map.insert n (SomeTypeRep m) Map.empty)
