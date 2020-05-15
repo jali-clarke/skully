@@ -18,16 +18,13 @@ instance Show (TypeRep a) where
     show Char = "Char"
     show _ = "Char :->: Char"
 
+nestedShow :: TypeRep a -> (String -> String)
+nestedShow a =
+    case a of
+        (_ :->: _) -> ('(' :) . (show a ++) . (')' :)
+        _ -> (show a ++)
+
 unify :: TypeRep a -> TypeRep b -> Either String (TypeRep a)
 unify Char Char = Right Char
 unify (Char :->: Char) (Char :->: Char) = Right (Char :->: Char)
-unify a b =
-    let aString =
-            case a of
-                (_ :->: _) -> "(" ++ show a ++ ")"
-                _ -> show a
-        bString =
-            case b of
-                _ :->: _ -> "(" ++ show b ++ ")"
-                _ -> show b
-    in Left ("cannot unify " ++ aString ++ " against " ++ bString)
+unify a b = Left (("cannot unify " ++) . nestedShow a . (" against " ++) . nestedShow b $ "")
