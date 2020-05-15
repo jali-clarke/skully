@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6119b42cb294230a713ad3e05caf5c38f7cac1adce4e3b457559e00482475d02
+-- hash: 3a7cc4364b28b314abd34b91ed0761991497fc3420a439964294382102d357d2
 
 name:           skully
 version:        0.1.0.0
@@ -29,6 +29,7 @@ library
       Skully.Base
       Skully.Internal.CharSocket
       Skully.Internal.Type
+      Skully.Internal.TypeRep
       Skully.Stdlib
       Skully.Stdlib.Combinators
       Skully.Stdlib.Containers
@@ -73,6 +74,8 @@ test-suite skully-test
   other-modules:
       Helpers
       TestSkully.Base
+      TestSkully.Internal
+      TestSkully.Internal.TypeRep
       TestSkully.Stdlib
       TestSkully.Stdlib.Combinators
       TestSkully.Stdlib.Containers
