@@ -15,14 +15,19 @@ instance Eq (TypeRep a) where
     _ == _ = False
 
 instance Show (TypeRep a) where
-    show Char = "Char"
-    show _ = "Char :->: Char"
+    show a = show' a ""
+
+show' :: TypeRep a -> (String -> String)
+show' a =
+    case a of
+        Char -> ("Char" ++)
+        _ -> ("Char :->: Char" ++)
 
 nestedShow :: TypeRep a -> (String -> String)
 nestedShow a =
     case a of
-        (_ :->: _) -> ('(' :) . (show a ++) . (')' :)
-        _ -> (show a ++)
+        (_ :->: _) -> ('(' :) . show' a . (')' :)
+        _ -> show' a
 
 unify :: TypeRep a -> TypeRep b -> Either String (TypeRep a)
 unify Char Char = Right Char
