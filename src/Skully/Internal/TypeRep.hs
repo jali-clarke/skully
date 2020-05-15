@@ -56,6 +56,6 @@ unify :: TypeRep a -> TypeRep b -> TypeMap -> Either String TypeMap
 unify Char Char m = Right m
 unify (Char :->: Char) (Char :->: Char) m = Right m
 unify (Var n0) (Var n1) m = Right (Map.insert (max n0 n1) (SomeTypeRep (Var (min n0 n1))) m)
-unify (Var n) m _ = Right (Map.insert n (SomeTypeRep m) Map.empty)
-unify m (Var n) _ = Right (Map.insert n (SomeTypeRep m) Map.empty)
+unify (Var n) t m = Right (Map.insert n (SomeTypeRep t) m)
+unify t (Var n) m = Right (Map.insert n (SomeTypeRep t) m)
 unify a b _ = Left (("cannot unify " ++) . nestedShow a . (" against " ++) . nestedShow b $ "")
