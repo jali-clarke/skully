@@ -43,8 +43,11 @@ decHexDigitToHex = overD3 .$ if_ .$ (gt 9) .$ (adjust 87) .$ (adjust 48)
 charToHex :: Skully (Char -> Pair b Char Char)
 charToHex = c .$ (f .$ withPair .$ (overD2 .$ c .$ (f .$ c) .$ (c .$ pair) .$ decHexDigitToHex)) .$ (divMod 16)
 
+printPairAsHex :: Skully (Pair b Char Char -> b -> b)
+printPairAsHex = c .$ (f .$ c .$ (f .$ (c .$ c .$ (c .$ (f .$ c) .$ (f .$ u))) .$ u)) .$ withPair
+
 printByteAsHex :: Skully (Char -> a -> a)
-printByteAsHex = c .$ (f .$ c .$ (c .$ (f .$ c .$ u) .$ (c .$ (f .$ c) .$ (f .$ u)))) .$ (c .$ withPair .$ charToHex)
+printByteAsHex = c .$ printPairAsHex .$ charToHex
 
 getAndPrintBytesAsHex :: Int -> Skully (a -> a)
 getAndPrintBytesAsHex n =
