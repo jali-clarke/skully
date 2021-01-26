@@ -19,6 +19,8 @@ newtype FakeCharSocket a = FakeCharSocket (State (String, String) a)
     deriving (Functor, Applicative, Monad)
 
 instance CharSocket FakeCharSocket where
+    initSocket = FakeCharSocket (pure ())
+
     getChar = FakeCharSocket $ do
         (input, output) <- get
         case input of

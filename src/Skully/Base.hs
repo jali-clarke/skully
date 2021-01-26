@@ -52,44 +52,48 @@ char = Char
 
 eval :: CharSocket m => Skully a -> m (Skully a)
 eval expr =
-    case expr of
-        Ap (Ap (Ap S abc) ab) a -> eval (Ap (Ap abc a) (Ap ab a))
-        Ap (Ap K a) _ -> eval a
-        Ap (Ap U c) a -> do
-            c' <- eval c
-            case c' of
-                Char x -> putChar x *> eval a
-                _ -> undefined -- will never be reached
-        Ap (Ap L d) g -> do
-            x <- getChar
-            case x of
-                Nothing -> eval d
-                Just x' -> eval (Ap g (Char x'))
-        Ap Y g -> eval (Ap g (Ap Y g))
-        Ap (Ap Q c) g -> do
-            c' <- eval c
-            case c' of
-                Char x -> eval (Ap (Ap g (Char (predChar x))) (Char (succChar x)))
-                _ -> eval (Ap (Ap Q c') g)
-        Ap (Ap (Ap (Ap (Ap E c0) c1) a) b) c -> do
-            (c0', c1') <- (,) <$> eval c0 <*> eval c1
-            case (c0', c1') of
-                (Char x0, Char x1) -> eval $ select (x0 `compare` x1) a b c
-                _ -> undefined -- will never be reached
-        Ap S _ -> pure expr
-        Ap (Ap S _) _ -> pure expr
-        Ap K _ -> pure expr
-        Ap U _ -> pure expr
-        Ap L _ -> pure expr
-        Ap Q _ -> pure expr
-        Ap E _ -> pure expr
-        Ap (Ap E _) _ -> pure expr
-        Ap (Ap (Ap E _) _) _ -> pure expr
-        Ap (Ap (Ap (Ap E _) _) _) _ -> pure expr
-        Ap a b -> do
-            a' <- eval a
-            eval (Ap a' b)
-        _ -> pure expr
+    let evalInner :: CharSocket m => Skully a -> m (Skully a)
+        evalInner expr' = 
+            case expr' of
+                Ap (Ap (Ap S abc) ab) a -> evalInner (Ap (Ap abc a) (Ap ab a))
+                Ap (Ap K a) _ -> evalInner a
+                Ap (Ap U c) a -> do
+                    c' <- evalInner c
+                    case c' of
+                        Char x -> putChar x *> evalInner a
+                        _ -> undefined -- will never be reached
+                Ap (Ap L d) g -> do
+                    x <- getChar
+                    case x of
+                        Nothing -> evalInner d
+                        Just x' -> evalInner (Ap g (Char x'))
+                Ap Y g -> evalInner (Ap g (Ap Y g))
+                Ap (Ap Q c) g -> do
+                    c' <- evalInner c
+                    case c' of
+                        Char x -> evalInner (Ap (Ap g (Char (predChar x))) (Char (succChar x)))
+                        _ -> evalInner (Ap (Ap Q c') g)
+                Ap (Ap (Ap (Ap (Ap E c0) c1) a) b) c -> do
+                    (c0', c1') <- (,) <$> evalInner c0 <*> evalInner c1
+                    case (c0', c1') of
+                        (Char x0, Char x1) -> evalInner $ select (x0 `compare` x1) a b c
+                        _ -> undefined -- will never be reached
+                Ap S _ -> pure expr'
+                Ap (Ap S _) _ -> pure expr'
+                Ap K _ -> pure expr'
+                Ap U _ -> pure expr'
+                Ap L _ -> pure expr'
+                Ap Q _ -> pure expr'
+                Ap E _ -> pure expr'
+                Ap (Ap E _) _ -> pure expr'
+                Ap (Ap (Ap E _) _) _ -> pure expr'
+                Ap (Ap (Ap (Ap E _) _) _) _ -> pure expr'
+                Ap a b -> do
+                    a' <- evalInner a
+                    evalInner (Ap a' b)
+                _ -> pure expr'
+
+    in initSocket *> evalInner expr
 
 optimizeStep :: Skully a -> Skully a
 optimizeStep expr =
