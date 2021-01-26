@@ -24,6 +24,7 @@ library
       Skully.Internal.CharSocket
       Skully.Internal.Type
       Skully.Internal.TypeRep
+      Skully.Placeholders
       Skully.Stdlib
       Skully.Stdlib.Combinators
       Skully.Stdlib.Containers
