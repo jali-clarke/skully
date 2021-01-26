@@ -55,11 +55,23 @@ getAndPrintBytesAsHex n =
 printDash :: Skully (a -> a)
 printDash = u .$ (char '-')
 
-dashPrefixed :: (b -> Skully (a -> a)) -> b -> Skully (a -> a)
-dashPrefixed cont b = printDash .$ cont b
+timeLow :: Skully (a -> a)
+timeLow = getAndPrintBytesAsHex 4
+
+timeMid :: Skully (a -> a)
+timeMid = getAndPrintBytesAsHex 2
+
+timeHiAndVersion :: Skully (a -> a)
+timeHiAndVersion = getAndPrintBytesAsHex 2
+
+clkAll :: Skully (a -> a)
+clkAll = getAndPrintBytesAsHex 2
+
+node :: Skully (a -> a)
+node = getAndPrintBytesAsHex 6
 
 genUUID4 :: Skully (a -> a)
-genUUID4 = getAndPrintBytesAsHex 4 .$ (dashPrefixed getAndPrintBytesAsHex 2 .$ (dashPrefixed getAndPrintBytesAsHex 2 .$ (dashPrefixed getAndPrintBytesAsHex 2 .$ (dashPrefixed getAndPrintBytesAsHex 6 .$ i))))
+genUUID4 = timeLow .$ (printDash .$ (timeMid .$ (printDash .$ (timeHiAndVersion .$ (printDash .$ (clkAll .$ (printDash .$ (node .$ i))))))))
 
 main :: IO ()
 main = void $ eval (optimize genUUID4)
