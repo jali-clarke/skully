@@ -65,7 +65,7 @@ timeMid :: Skully (a -> a)
 timeMid = getAndPrintBytesAsHex 2
 
 timeHiAndVersion :: Skully (a -> a)
-timeHiAndVersion = getAndPrintBytesAsHex 2
+timeHiAndVersion = s .$ l .$ (f .$ (c .$ c .$ (c .$ (f .$ printPairAsHex) .$ getAndPrintBytesAsHex 1)) .$ (c .$ (f .$ withPair .$ (k .$ (pair .$ char '4'))) .$ charToHex))
 
 clkAll :: Skully (a -> a)
 clkAll = getAndPrintBytesAsHex 2
