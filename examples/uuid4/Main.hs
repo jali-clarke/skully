@@ -15,12 +15,15 @@ false = f .$ k
 if_ :: Skully (SBool b -> b -> b -> b)
 if_ = i
 
+addChar :: Skully (Char -> Char -> Char)
+addChar = y .$ (c .$ (s .$ (c .$ s .$ (c .$ d .$ (f .$ e .$ char '\x00')))) .$ (c .$ (c .$ (f .$ q)) .$ (c .$ (c .$ k) .$ (f .$ (c .$ c .$ (c .$ (f .$ c) .$ (c .$ (c .$ (c .$ k)) .$ f))) .$ q))))
+
 adjust :: Int -> Skully (Char -> Char)
 adjust n =
     case n `compare` 0 of
         EQ -> i
         LT -> f .$ q .$ (c .$ k .$ (adjust (n + 1)))
-        GT -> f .$ q .$ (k .$ (adjust (n - 1)))
+        GT -> addChar .$ char (chr n)
 
 gt :: Int -> Skully (Char -> SBool b)
 gt n = f .$ (f .$ (f .$ (f .$ e .$ (char (chr n))) .$ false) .$ false) .$ true
@@ -77,4 +80,14 @@ genUUID4 :: Skully (a -> a)
 genUUID4 = timeLow .$ (printDash .$ (timeMid .$ (printDash .$ (timeHiAndVersion .$ (printDash .$ (clkAll .$ (printDash .$ (node .$ i))))))))
 
 main :: IO ()
-main = void $ eval (optimize genUUID4)
+main = do
+    let original = genUUID4
+    putStrLn "--- original"
+    print original
+
+    let optimized = optimize original
+    putStrLn "--- optimized"
+    print optimized
+
+    putStrLn "--- execution (input lines as necessary)"
+    void (eval optimized)
