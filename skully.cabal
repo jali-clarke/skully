@@ -35,7 +35,7 @@ library
   ghc-options: -Wall -Werror
   build-depends:
       base >=4.7 && <5
-    , containers ==0.6.2.1
+    , containers ==0.7
   default-language: Haskell2010
 
 executable reverseLines
@@ -45,7 +45,7 @@ executable reverseLines
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
-    , containers ==0.6.2.1
+    , containers ==0.7
     , skully
   default-language: Haskell2010
 
@@ -56,7 +56,7 @@ executable uppercase
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
-    , containers ==0.6.2.1
+    , containers ==0.7
     , skully
   default-language: Haskell2010
 
@@ -67,7 +67,7 @@ executable uuid4
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
-    , containers ==0.6.2.1
+    , containers ==0.7
     , skully
   default-language: Haskell2010
 
@@ -89,8 +89,8 @@ test-suite skully-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
-    , containers ==0.6.2.1
-    , hspec ==2.7.1
-    , mtl ==2.2.2
+    , containers ==0.7
+    , hspec ==2.11.14
+    , mtl ==2.3.1
     , skully
   default-language: Haskell2010
